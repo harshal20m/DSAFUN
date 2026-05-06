@@ -222,7 +222,7 @@ class UserPreferencesDataStore(private val context: Context) {
     }
     
     val appTheme: Flow<String> = dataStore.data.map { preferences ->
-        preferences[APP_THEME] ?: "DARK"
+        preferences[APP_THEME] ?: "SYSTEM"
     }
     
     suspend fun setAppTheme(theme: String) {

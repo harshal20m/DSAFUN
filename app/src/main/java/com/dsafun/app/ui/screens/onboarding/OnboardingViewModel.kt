@@ -12,10 +12,19 @@ class OnboardingViewModel @Inject constructor(
     private val userPreferences: UserPreferencesDataStore
 ) : ViewModel() {
     
-    fun completeOnboarding(userName: String, dailyGoal: Int) {
+    fun completeOnboarding(
+        userName: String,
+        preferredLanguage: String,
+        theme: String,
+        dailyGoal: Int,
+        notificationsEnabled: Boolean
+    ) {
         viewModelScope.launch {
             userPreferences.setUserName(userName)
+            userPreferences.setPreferredLanguage(preferredLanguage)
+            userPreferences.setAppTheme(theme)
             userPreferences.setDailyGoal(dailyGoal)
+            userPreferences.setReminderEnabled(notificationsEnabled)
             userPreferences.setOnboardingComplete(true)
         }
     }

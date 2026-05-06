@@ -20,9 +20,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.dsafun.app.domain.model.TimerState
 import com.dsafun.app.navigation.Screen
 import com.dsafun.app.ui.components.BottomNavigationBar
 import com.dsafun.app.ui.components.DsaNavigationRail
+import com.dsafun.app.ui.components.FloatingTimerWidget
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.dsafun.app.data.local.datastore.UserPreferencesDataStore
@@ -35,6 +37,7 @@ import com.dsafun.app.ui.screens.onboarding.OnboardingFlow
 import com.dsafun.app.ui.screens.problemdetail.ProblemDetailScreen
 import com.dsafun.app.ui.screens.streak.StreakScreen
 import com.dsafun.app.ui.screens.timer.FocusTimerScreen
+import com.dsafun.app.ui.screens.timer.FocusTimerViewModel
 import com.dsafun.app.ui.theme.DsaAppTheme
 import com.dsafun.app.ui.theme.Motion
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,13 +54,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
-            val appTheme by userPreferences.appTheme.collectAsState(initial = "DARK")
+            val appTheme by userPreferences.appTheme.collectAsState(initial = "SYSTEM")
             val theme = when (appTheme) {
-                "LIGHT" -> com.dsafun.app.ui.theme.AppTheme.LIGHT
+                "SYSTEM" -> com.dsafun.app.ui.theme.AppTheme.SYSTEM
+                "DARK" -> com.dsafun.app.ui.theme.AppTheme.DARK
                 "MONOKAI" -> com.dsafun.app.ui.theme.AppTheme.MONOKAI
                 "DRACULA" -> com.dsafun.app.ui.theme.AppTheme.DRACULA
                 "NORD" -> com.dsafun.app.ui.theme.AppTheme.NORD
-                else -> com.dsafun.app.ui.theme.AppTheme.DARK
+                else -> com.dsafun.app.ui.theme.AppTheme.LIGHT
             }
             
             DsaAppTheme(theme = theme) {
@@ -125,6 +129,14 @@ fun MainAppContent(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     
+    // Get FocusTimerViewModel scoped to the activity to share state globally
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val activity = context as? ComponentActivity
+    val timerViewModel: FocusTimerViewModel = hiltViewModel(
+        viewModelStoreOwner = activity ?: context as ComponentActivity
+    )
+    val timerUiState by timerViewModel.uiState.collectAsState()
+    
     // Determine if we should use NavigationRail (tablets) or BottomNav (phones)
     val useNavigationRail = windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact
 
@@ -137,32 +149,11 @@ fun MainAppContent(
         }
     }
 
-    // Adaptive Scaffold: NavigationRail for tablets, BottomNav for phones
-    if (useNavigationRail) {
-        Row(modifier = Modifier.fillMaxSize()) {
-            DsaNavigationRail(
-                currentRoute = currentRoute,
-                onNavigate = { route ->
-                    navController.navigate(route) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                },
-                showLabels = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
-            )
-            NavigationGraph(
-                navController = navController,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-    } else {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            bottomBar = {
-                BottomNavigationBar(
+    Box(modifier = Modifier.fillMaxSize()) {
+        // Adaptive Scaffold: NavigationRail for tablets, BottomNav for phones
+        if (useNavigationRail) {
+            Row(modifier = Modifier.fillMaxSize()) {
+                DsaNavigationRail(
                     currentRoute = currentRoute,
                     onNavigate = { route ->
                         navController.navigate(route) {
@@ -172,14 +163,56 @@ fun MainAppContent(
                             launchSingleTop = true
                             restoreState = true
                         }
-                    }
+                    },
+                    showLabels = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
+                )
+                NavigationGraph(
+                    navController = navController,
+                    timerViewModel = timerViewModel,
+                    modifier = Modifier.fillMaxSize()
                 )
             }
-        ) { innerPadding ->
-            NavigationGraph(
-                navController = navController,
-                modifier = Modifier.padding(innerPadding)
-            )
+        } else {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                bottomBar = {
+                    // Bottom bar with floating timer widget on top
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        // Floating Timer Widget - Positioned above bottom nav
+                        if (currentRoute != Screen.Timer.route) {
+                            FloatingTimerWidget(
+                                timerSeconds = timerUiState.remainingSeconds,  // Show remaining time (countdown)
+                                isVisible = timerUiState.isFloatingWidgetVisible &&
+                                           (timerUiState.timerState == TimerState.RUNNING || timerUiState.timerState == TimerState.PAUSED),
+                                onDismiss = { timerViewModel.hideFloatingWidget() },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                        
+                        BottomNavigationBar(
+                            currentRoute = currentRoute,
+                            onNavigate = { route ->
+                                navController.navigate(route) {
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        )
+                    }
+                }
+            ) { innerPadding ->
+                NavigationGraph(
+                    navController = navController,
+                    timerViewModel = timerViewModel,
+                    modifier = Modifier.padding(innerPadding)
+                )
+            }
         }
     }
 }
@@ -187,6 +220,7 @@ fun MainAppContent(
 @Composable
 fun NavigationGraph(
     navController: NavHostController,
+    timerViewModel: FocusTimerViewModel,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -242,7 +276,7 @@ fun NavigationGraph(
             StreakScreen()
         }
         composable(Screen.Timer.route) {
-            FocusTimerScreen()
+            FocusTimerScreen(viewModel = timerViewModel)
         }
         composable(Screen.Analytics.route) {
             AnalyticsScreen()

@@ -1,9 +1,13 @@
 package com.dsafun.app.ui.screens
 
 import android.app.TimePickerDialog
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -12,7 +16,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -180,11 +186,13 @@ fun SettingsScreen(
                     icon = Icons.Outlined.Palette,
                     title = "App Theme",
                     subtitle = when (uiState.appTheme) {
+                        "SYSTEM" -> "System Default"
                         "LIGHT" -> "Light"
+                        "DARK" -> "Dark"
                         "MONOKAI" -> "Monokai"
                         "DRACULA" -> "Dracula"
                         "NORD" -> "Nord"
-                        else -> "Dark"
+                        else -> "System Default"
                     },
                     onClick = { showThemeDialog = true }
                 )
@@ -217,14 +225,135 @@ fun SettingsScreen(
 
             Divider(modifier = Modifier.padding(vertical = 8.dp))
 
-            // About Section
-            SettingsSection(title = "About") {
+            // Developer Section
+            SettingsSection(title = "About Developer") {
+                // Developer Card
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Made with ❤️",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
+                        Text(
+                            text = "Harshal Mali",
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold
+                        )
+                        
+                        Text(
+                            text = "SWE @IBM",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        
+                        Text(
+                            text = "Open Source Developer by Heart",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        
+                        Spacer(modifier = Modifier.height(8.dp))
+                        
+                        Text(
+                            text = "Build for People",
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+                
+                // Social Links
+                SettingsItem(
+                    icon = Icons.Default.Person,
+                    title = "Instagram",
+                    subtitle = "@20harshal",
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://instagram.com/20harshal"))
+                        context.startActivity(intent)
+                    }
+                )
+                
+                SettingsItem(
+                    icon = Icons.Default.Code,
+                    title = "GitHub",
+                    subtitle = "@harshal20m",
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/harshal20m"))
+                        context.startActivity(intent)
+                    }
+                )
+            }
+            
+            Divider(modifier = Modifier.padding(vertical = 8.dp))
+            
+            // Other Projects Section
+            SettingsSection(title = "Explore My Other Projects") {
+                SettingsItem(
+                    icon = Icons.Default.AccountBalance,
+                    title = "PaisaTracker",
+                    subtitle = "Personal Finance Manager",
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/harshal20m/PaisaTracker"))
+                        context.startActivity(intent)
+                    }
+                )
+                
+                SettingsItem(
+                    icon = Icons.Default.Note,
+                    title = "NotesVault",
+                    subtitle = "Secure Notes App",
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/harshal20m/NotesVault"))
+                        context.startActivity(intent)
+                    }
+                )
+                
+                SettingsItem(
+                    icon = Icons.Default.Star,
+                    title = "Star this Repository",
+                    subtitle = "Show your support ⭐",
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/harshal20m/DSAFUN"))
+                        context.startActivity(intent)
+                    }
+                )
+            }
+            
+            Divider(modifier = Modifier.padding(vertical = 8.dp))
+            
+            // App Info Section
+            SettingsSection(title = "App Info") {
                 SettingsItem(
                     icon = Icons.Default.Info,
-                    title = "App Version",
+                    title = "Version",
                     subtitle = uiState.appVersion,
                     onClick = { }
                 )
+                
+                SettingsItem(
+                    icon = Icons.Default.SmartToy,
+                    title = "Built With",
+                    subtitle = "IBM Bob - Agentic AI",
+                    onClick = { }
+                )
+                
                 SettingsItem(
                     icon = Icons.Default.EmojiEvents,
                     title = "Your Stats",
@@ -333,22 +462,26 @@ fun SettingsScreen(
     if (showThemeDialog) {
         SelectionDialog(
             title = "App Theme",
-            options = listOf("Dark", "Light", "Monokai", "Dracula", "Nord"),
+            options = listOf("System Default", "Light", "Dark", "Monokai", "Dracula", "Nord"),
             selectedOption = when (uiState.appTheme) {
+                "SYSTEM" -> "System Default"
                 "LIGHT" -> "Light"
+                "DARK" -> "Dark"
                 "MONOKAI" -> "Monokai"
                 "DRACULA" -> "Dracula"
                 "NORD" -> "Nord"
-                else -> "Dark"
+                else -> "System Default"
             },
             onDismiss = { showThemeDialog = false },
             onSelect = { theme ->
                 val themeKey = when (theme) {
+                    "System Default" -> "SYSTEM"
                     "Light" -> "LIGHT"
+                    "Dark" -> "DARK"
                     "Monokai" -> "MONOKAI"
                     "Dracula" -> "DRACULA"
                     "Nord" -> "NORD"
-                    else -> "DARK"
+                    else -> "SYSTEM"
                 }
                 viewModel.updateAppTheme(themeKey)
                 showThemeDialog = false

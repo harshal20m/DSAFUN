@@ -3,7 +3,9 @@ package com.dsafun.app.ui.screens.timer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dsafun.app.data.local.dao.FocusSessionDao
+import com.dsafun.app.data.local.dao.ProblemDao
 import com.dsafun.app.data.local.entity.FocusSessionEntity
+import com.dsafun.app.data.local.entity.toDomainModel
 import com.dsafun.app.domain.model.FocusSession
 import com.dsafun.app.domain.model.Problem
 import com.dsafun.app.domain.model.SessionType
@@ -27,12 +29,16 @@ data class FocusTimerUiState(
     val todaySessions: List<FocusSession> = emptyList(),
     val totalMinutesToday: Long = 0,
     val customDurationMinutes: Int = 25,
-    val breakMessage: String = ""
+    val breakMessage: String = "",
+    val allProblems: List<Problem> = emptyList(),
+    val showProblemPicker: Boolean = false,
+    val isFloatingWidgetVisible: Boolean = true
 )
 
 @HiltViewModel
 class FocusTimerViewModel @Inject constructor(
-    private val focusSessionDao: FocusSessionDao
+    private val focusSessionDao: FocusSessionDao,
+    private val problemDao: ProblemDao
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(FocusTimerUiState())
@@ -56,6 +62,25 @@ class FocusTimerViewModel @Inject constructor(
 
     init {
         loadTodaySessions()
+        loadAllProblems()
+    }
+    
+    private fun loadAllProblems() {
+        viewModelScope.launch {
+            problemDao.getAllProblems().collect { problemEntities ->
+                _uiState.value = _uiState.value.copy(
+                    allProblems = problemEntities.map { it.toDomainModel() }
+                )
+            }
+        }
+    }
+    
+    fun showProblemPicker() {
+        _uiState.value = _uiState.value.copy(showProblemPicker = true)
+    }
+    
+    fun hideProblemPicker() {
+        _uiState.value = _uiState.value.copy(showProblemPicker = false)
     }
 
     private fun loadTodaySessions() {
@@ -99,6 +124,22 @@ class FocusTimerViewModel @Inject constructor(
             remainingSeconds = duration
         )
     }
+    
+    fun onTargetSessionsChanged(sessions: Int) {
+        if (_uiState.value.timerState != TimerState.IDLE) return
+        
+        _uiState.value = _uiState.value.copy(
+            targetSessions = sessions.coerceIn(1, 10)
+        )
+    }
+    
+    fun hideFloatingWidget() {
+        _uiState.value = _uiState.value.copy(isFloatingWidgetVisible = false)
+    }
+    
+    fun showFloatingWidget() {
+        _uiState.value = _uiState.value.copy(isFloatingWidgetVisible = true)
+    }
 
     fun onCustomDurationSet(minutes: Int) {
         _uiState.value = _uiState.value.copy(
@@ -114,7 +155,10 @@ class FocusTimerViewModel @Inject constructor(
 
     fun onStartTimer() {
         sessionStartTime = System.currentTimeMillis()
-        _uiState.value = _uiState.value.copy(timerState = TimerState.RUNNING)
+        _uiState.value = _uiState.value.copy(
+            timerState = TimerState.RUNNING,
+            isFloatingWidgetVisible = true  // Show widget when timer starts
+        )
         startTicker()
     }
 
@@ -124,7 +168,10 @@ class FocusTimerViewModel @Inject constructor(
     }
 
     fun onResumeTimer() {
-        _uiState.value = _uiState.value.copy(timerState = TimerState.RUNNING)
+        _uiState.value = _uiState.value.copy(
+            timerState = TimerState.RUNNING,
+            isFloatingWidgetVisible = true  // Show widget when timer resumes
+        )
         startTicker()
     }
 

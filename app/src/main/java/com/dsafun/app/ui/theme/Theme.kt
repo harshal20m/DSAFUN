@@ -1,6 +1,7 @@
 package com.dsafun.app.ui.theme
 
 import android.app.Activity
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -13,7 +14,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 enum class AppTheme {
-    DARK, LIGHT, MONOKAI, DRACULA, NORD
+    SYSTEM, LIGHT, DARK, MONOKAI, DRACULA, NORD
 }
 
 private val DarkColorScheme = darkColorScheme(
@@ -178,8 +179,9 @@ private val NordColorScheme = darkColorScheme(
 
 fun getColorScheme(theme: AppTheme): ColorScheme {
     return when (theme) {
-        AppTheme.DARK -> DarkColorScheme
+        AppTheme.SYSTEM -> LightColorScheme // Will be resolved in DsaAppTheme
         AppTheme.LIGHT -> LightColorScheme
+        AppTheme.DARK -> DarkColorScheme
         AppTheme.MONOKAI -> MonokaiColorScheme
         AppTheme.DRACULA -> DraculaColorScheme
         AppTheme.NORD -> NordColorScheme
@@ -188,12 +190,21 @@ fun getColorScheme(theme: AppTheme): ColorScheme {
 
 @Composable
 fun DsaAppTheme(
-    theme: AppTheme = AppTheme.DARK,
+    theme: AppTheme = AppTheme.SYSTEM,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = getColorScheme(theme)
+    val systemInDarkTheme = isSystemInDarkTheme()
+    
+    // Determine actual theme based on SYSTEM setting
+    val actualTheme = if (theme == AppTheme.SYSTEM) {
+        if (systemInDarkTheme) AppTheme.DARK else AppTheme.LIGHT
+    } else {
+        theme
+    }
+    
+    val colorScheme = getColorScheme(actualTheme)
     val view = LocalView.current
-    val isLight = theme == AppTheme.LIGHT
+    val isLight = actualTheme == AppTheme.LIGHT
     
     if (!view.isInEditMode) {
         SideEffect {

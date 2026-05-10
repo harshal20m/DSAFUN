@@ -26,7 +26,7 @@ class RetrofitGitHubUpdateChecker @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     private val GITHUB_OWNER = "harshal20m"
-    private val GITHUB_REPO = "NotesVault"
+    private val GITHUB_REPO = "DSAFUN"
     private val CURRENT_VERSION = "1.0.0" // Should match versionName in build.gradle
     
     private val LATEST_VERSION_KEY = stringPreferencesKey("latest_version")

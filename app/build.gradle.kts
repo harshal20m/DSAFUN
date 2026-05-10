@@ -32,6 +32,14 @@ android {
             )
         }
     }
+    
+    applicationVariants.all {
+        outputs.all {
+            val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            val versionName = defaultConfig.versionName
+            output.outputFileName = "DSAfun_v${versionName}.apk"
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -41,6 +49,11 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+    sourceSets {
+        getByName("main") {
+            assets.srcDirs("src", "src/main/assets")
+        }
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.8"

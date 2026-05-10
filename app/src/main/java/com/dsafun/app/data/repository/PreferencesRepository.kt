@@ -70,6 +70,11 @@ class PreferencesRepository @Inject constructor(
     suspend fun setStreakWarningEnabled(enabled: Boolean) = dataStore.setStreakWarningEnabled(enabled)
     suspend fun setWeeklySummaryEnabled(enabled: Boolean) = dataStore.setWeeklySummaryEnabled(enabled)
     
+    // App Updates
+    val autoUpdateEnabled: Flow<Boolean> = dataStore.autoUpdateEnabled
+    
+    suspend fun setAutoUpdateEnabled(enabled: Boolean) = dataStore.setAutoUpdateEnabled(enabled)
+    
     // Aggregated Stats
     val userStats: Flow<UserStats> = dataStore.userStats
 }

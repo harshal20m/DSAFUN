@@ -50,6 +50,9 @@ class UserPreferencesDataStore(private val context: Context) {
         val STREAK_WARNING_ENABLED = booleanPreferencesKey("streak_warning_enabled")
         val WEEKLY_SUMMARY_ENABLED = booleanPreferencesKey("weekly_summary_enabled")
         
+        // App Updates
+        val AUTO_UPDATE_ENABLED = booleanPreferencesKey("auto_update_enabled")
+        
         // Level thresholds for XP
         val LEVEL_THRESHOLDS = listOf(
             0,      // Level 1
@@ -294,6 +297,17 @@ class UserPreferencesDataStore(private val context: Context) {
     suspend fun setWeeklySummaryEnabled(enabled: Boolean) {
         dataStore.edit { preferences ->
             preferences[WEEKLY_SUMMARY_ENABLED] = enabled
+        }
+    }
+    
+    // App Updates
+    val autoUpdateEnabled: Flow<Boolean> = dataStore.data.map { preferences ->
+        preferences[AUTO_UPDATE_ENABLED] ?: false
+    }
+    
+    suspend fun setAutoUpdateEnabled(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[AUTO_UPDATE_ENABLED] = enabled
         }
     }
     

@@ -4,14 +4,16 @@ import android.app.TimePickerDialog
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -59,171 +61,323 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
+                .padding(vertical = 8.dp)
         ) {
-            // Profile Section
+            // Profile Section with Card
             SettingsSection(title = "Profile") {
-                SettingsItem(
-                    icon = Icons.Default.Person,
-                    title = "Name",
-                    subtitle = uiState.userName.ifEmpty { "Not set" },
-                    onClick = { showNameDialog = true }
-                )
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                ) {
+                    SettingsItem(
+                        icon = Icons.Outlined.Person,
+                        title = "Name",
+                        subtitle = uiState.userName.ifEmpty { "Not set" },
+                        onClick = { showNameDialog = true }
+                    )
+                }
             }
 
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Code Editor Section
             SettingsSection(title = "Code Editor") {
-                SettingsItem(
-                    icon = Icons.Default.Code,
-                    title = "Preferred Language",
-                    subtitle = when (uiState.preferredLanguage) {
-                        "KOTLIN" -> "Kotlin"
-                        "JAVA" -> "Java"
-                        "PYTHON" -> "Python"
-                        "JAVASCRIPT" -> "JavaScript"
-                        "CPP" -> "C++"
-                        else -> uiState.preferredLanguage
-                    },
-                    onClick = { showLanguageDialog = true }
-                )
-                SettingsItem(
-                    icon = Icons.Default.TextFields,
-                    title = "Font Size",
-                    subtitle = when (uiState.fontSizePreference) {
-                        "SMALL" -> "Small"
-                        "MEDIUM" -> "Medium"
-                        "LARGE" -> "Large"
-                        else -> uiState.fontSizePreference
-                    },
-                    onClick = { showFontSizeDialog = true }
-                )
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                ) {
+                    Column {
+                        SettingsItem(
+                            icon = Icons.Outlined.Code,
+                            title = "Preferred Language",
+                            subtitle = when (uiState.preferredLanguage) {
+                                "KOTLIN" -> "Kotlin"
+                                "JAVA" -> "Java"
+                                "PYTHON" -> "Python"
+                                "JAVASCRIPT" -> "JavaScript"
+                                "CPP" -> "C++"
+                                else -> uiState.preferredLanguage
+                            },
+                            onClick = { showLanguageDialog = true }
+                        )
+                        Divider(modifier = Modifier.padding(horizontal = 16.dp))
+                        SettingsItem(
+                            icon = Icons.Outlined.TextFields,
+                            title = "Font Size",
+                            subtitle = when (uiState.fontSizePreference) {
+                                "SMALL" -> "Small"
+                                "MEDIUM" -> "Medium"
+                                "LARGE" -> "Large"
+                                else -> uiState.fontSizePreference
+                            },
+                            onClick = { showFontSizeDialog = true }
+                        )
+                    }
+                }
             }
 
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Notifications Section
             SettingsSection(title = "Notifications") {
-                SettingsSwitchItem(
-                    icon = Icons.Default.Notifications,
-                    title = "Daily Reminder",
-                    subtitle = if (uiState.reminderEnabled) {
-                        String.format("%02d:%02d", uiState.reminderHour, uiState.reminderMinute)
-                    } else {
-                        "Disabled"
-                    },
-                    checked = uiState.reminderEnabled,
-                    onCheckedChange = { enabled ->
-                        viewModel.updateReminderEnabled(enabled)
-                        coroutineScope.launch {
-                            snackbarHostState.showSnackbar(
-                                if (enabled) "Daily reminder enabled" else "Daily reminder disabled"
-                            )
-                        }
-                    }
-                )
-                
-                if (uiState.reminderEnabled) {
-                    SettingsItem(
-                        icon = Icons.Default.Schedule,
-                        title = "Reminder Time",
-                        subtitle = String.format("%02d:%02d", uiState.reminderHour, uiState.reminderMinute),
-                        onClick = {
-                            TimePickerDialog(
-                                context,
-                                { _, hour, minute ->
-                                    viewModel.updateReminderTime(hour, minute)
-                                    coroutineScope.launch {
-                                        snackbarHostState.showSnackbar(
-                                            "Reminder time set to ${String.format("%02d:%02d", hour, minute)}"
-                                        )
-                                    }
-                                },
-                                uiState.reminderHour,
-                                uiState.reminderMinute,
-                                true
-                            ).show()
-                        }
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
                     )
+                ) {
+                    Column {
+                        SettingsSwitchItem(
+                            icon = Icons.Outlined.Notifications,
+                            title = "Daily Reminder",
+                            subtitle = if (uiState.reminderEnabled) {
+                                String.format("%02d:%02d", uiState.reminderHour, uiState.reminderMinute)
+                            } else {
+                                "Disabled"
+                            },
+                            checked = uiState.reminderEnabled,
+                            onCheckedChange = { enabled ->
+                                viewModel.updateReminderEnabled(enabled)
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        if (enabled) "Daily reminder enabled" else "Daily reminder disabled"
+                                    )
+                                }
+                            }
+                        )
+                        
+                        if (uiState.reminderEnabled) {
+                            Divider(modifier = Modifier.padding(horizontal = 16.dp))
+                            SettingsItem(
+                                icon = Icons.Outlined.Schedule,
+                                title = "Reminder Time",
+                                subtitle = String.format("%02d:%02d", uiState.reminderHour, uiState.reminderMinute),
+                                onClick = {
+                                    TimePickerDialog(
+                                        context,
+                                        { _, hour, minute ->
+                                            viewModel.updateReminderTime(hour, minute)
+                                            coroutineScope.launch {
+                                                snackbarHostState.showSnackbar(
+                                                    "Reminder time set to ${String.format("%02d:%02d", hour, minute)}"
+                                                )
+                                            }
+                                        },
+                                        uiState.reminderHour,
+                                        uiState.reminderMinute,
+                                        true
+                                    ).show()
+                                }
+                            )
+                        }
+
+                        Divider(modifier = Modifier.padding(horizontal = 16.dp))
+                        SettingsSwitchItem(
+                            icon = Icons.Outlined.Warning,
+                            title = "Streak Warning",
+                            subtitle = "Remind me if I haven't solved today",
+                            checked = uiState.streakWarningEnabled,
+                            onCheckedChange = { enabled ->
+                                viewModel.updateStreakWarningEnabled(enabled)
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        if (enabled) "Streak warning enabled" else "Streak warning disabled"
+                                    )
+                                }
+                            }
+                        )
+
+                        Divider(modifier = Modifier.padding(horizontal = 16.dp))
+                        SettingsSwitchItem(
+                            icon = Icons.Outlined.CalendarMonth,
+                            title = "Weekly Summary",
+                            subtitle = "Sunday progress report",
+                            checked = uiState.weeklySummaryEnabled,
+                            onCheckedChange = { enabled ->
+                                viewModel.updateWeeklySummaryEnabled(enabled)
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        if (enabled) "Weekly summary enabled" else "Weekly summary disabled"
+                                    )
+                                }
+                            }
+                        )
+                    }
                 }
-
-                SettingsSwitchItem(
-                    icon = Icons.Default.Warning,
-                    title = "Streak Warning",
-                    subtitle = "Remind me if I haven't solved today",
-                    checked = uiState.streakWarningEnabled,
-                    onCheckedChange = { enabled ->
-                        viewModel.updateStreakWarningEnabled(enabled)
-                        coroutineScope.launch {
-                            snackbarHostState.showSnackbar(
-                                if (enabled) "Streak warning enabled" else "Streak warning disabled"
-                            )
-                        }
-                    }
-                )
-
-                SettingsSwitchItem(
-                    icon = Icons.Default.CalendarMonth,
-                    title = "Weekly Summary",
-                    subtitle = "Sunday progress report",
-                    checked = uiState.weeklySummaryEnabled,
-                    onCheckedChange = { enabled ->
-                        viewModel.updateWeeklySummaryEnabled(enabled)
-                        coroutineScope.launch {
-                            snackbarHostState.showSnackbar(
-                                if (enabled) "Weekly summary enabled" else "Weekly summary disabled"
-                            )
-                        }
-                    }
-                )
             }
 
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Appearance Section
             SettingsSection(title = "Appearance") {
-                SettingsItem(
-                    icon = Icons.Outlined.Palette,
-                    title = "App Theme",
-                    subtitle = when (uiState.appTheme) {
-                        "SYSTEM" -> "System Default"
-                        "LIGHT" -> "Light"
-                        "DARK" -> "Dark"
-                        "MONOKAI" -> "Monokai"
-                        "DRACULA" -> "Dracula"
-                        "NORD" -> "Nord"
-                        else -> "System Default"
-                    },
-                    onClick = { showThemeDialog = true }
-                )
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                ) {
+                    SettingsItem(
+                        icon = Icons.Outlined.Palette,
+                        title = "App Theme",
+                        subtitle = when (uiState.appTheme) {
+                            "SYSTEM" -> "System Default"
+                            "LIGHT" -> "Light"
+                            "DARK" -> "Dark"
+                            "MONOKAI" -> "Monokai"
+                            "DRACULA" -> "Dracula"
+                            "NORD" -> "Nord"
+                            else -> "System Default"
+                        },
+                        onClick = { showThemeDialog = true }
+                    )
+                }
             }
 
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Goals Section
             SettingsSection(title = "Goals") {
-                SettingsItem(
-                    icon = Icons.Default.Flag,
-                    title = "Daily Goal",
-                    subtitle = "${uiState.dailyGoal} problem${if (uiState.dailyGoal != 1) "s" else ""} per day",
-                    onClick = { showDailyGoalDialog = true }
-                )
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                ) {
+                    SettingsItem(
+                        icon = Icons.Outlined.Flag,
+                        title = "Daily Goal",
+                        subtitle = "${uiState.dailyGoal} problem${if (uiState.dailyGoal != 1) "s" else ""} per day",
+                        onClick = { showDailyGoalDialog = true }
+                    )
+                }
             }
 
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // App Updates Section
+            SettingsSection(title = "App Updates") {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                ) {
+                    Column {
+                        SettingsItem(
+                            icon = Icons.Outlined.SystemUpdate,
+                            title = "Check for Updates",
+                            subtitle = uiState.updateInfo?.let {
+                                "Version ${it.latestVersion} available"
+                            } ?: "You're up to date",
+                            onClick = {
+                                viewModel.checkForUpdates()
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar("Checking for updates...")
+                                }
+                            }
+                        )
+                        
+                        Divider(modifier = Modifier.padding(horizontal = 16.dp))
+                        SettingsSwitchItem(
+                            icon = Icons.Outlined.CloudDownload,
+                            title = "Auto-update",
+                            subtitle = "Automatically download updates",
+                            checked = uiState.autoUpdateEnabled,
+                            onCheckedChange = { enabled ->
+                                viewModel.updateAutoUpdateEnabled(enabled)
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        if (enabled) "Auto-update enabled" else "Auto-update disabled"
+                                    )
+                                }
+                            }
+                        )
+                    }
+                }
+                
+                // Show download button if update is available
+                uiState.updateInfo?.let { updateInfo ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        ) {
+                            Text(
+                                text = "New Update Available!",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "Version ${updateInfo.latestVersion}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Button(
+                                onClick = {
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(updateInfo.downloadUrl))
+                                    context.startActivity(intent)
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(Icons.Default.Download, contentDescription = null)
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("Download Update")
+                            }
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Data Section
             SettingsSection(title = "Data") {
-                SettingsItem(
-                    icon = Icons.Default.Delete,
-                    title = "Reset Progress",
-                    subtitle = "Reset streak (keeps XP and problems solved)",
-                    onClick = { showResetDialog = true },
-                    isDestructive = true
-                )
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
+                    )
+                ) {
+                    SettingsItem(
+                        icon = Icons.Outlined.Delete,
+                        title = "Reset Progress",
+                        subtitle = "Reset streak (keeps XP and problems solved)",
+                        onClick = { showResetDialog = true },
+                        isDestructive = true
+                    )
+                }
             }
 
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Developer Section
             SettingsSection(title = "About Developer") {
@@ -280,86 +434,124 @@ fun SettingsScreen(
                 }
                 
                 // Social Links
-                SettingsItem(
-                    icon = Icons.Default.Person,
-                    title = "Instagram",
-                    subtitle = "@20harshal",
-                    onClick = {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://instagram.com/20harshal"))
-                        context.startActivity(intent)
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                ) {
+                    Column {
+                        SettingsItem(
+                            icon = Icons.Outlined.Person,
+                            title = "Instagram",
+                            subtitle = "@20harshal",
+                            onClick = {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://instagram.com/20harshal"))
+                                context.startActivity(intent)
+                            }
+                        )
+                        
+                        Divider(modifier = Modifier.padding(horizontal = 16.dp))
+                        SettingsItem(
+                            icon = Icons.Outlined.Code,
+                            title = "GitHub",
+                            subtitle = "@harshal20m",
+                            onClick = {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/harshal20m"))
+                                context.startActivity(intent)
+                            }
+                        )
                     }
-                )
-                
-                SettingsItem(
-                    icon = Icons.Default.Code,
-                    title = "GitHub",
-                    subtitle = "@harshal20m",
-                    onClick = {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/harshal20m"))
-                        context.startActivity(intent)
-                    }
-                )
+                }
             }
             
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             
             // Other Projects Section
             SettingsSection(title = "Explore My Other Projects") {
-                SettingsItem(
-                    icon = Icons.Default.AccountBalance,
-                    title = "PaisaTracker",
-                    subtitle = "Personal Finance Manager",
-                    onClick = {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/harshal20m/PaisaTracker"))
-                        context.startActivity(intent)
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                ) {
+                    Column {
+                        SettingsItem(
+                            icon = Icons.Outlined.AccountBalance,
+                            title = "PaisaTracker",
+                            subtitle = "Personal Finance Manager",
+                            onClick = {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/harshal20m/PaisaTracker"))
+                                context.startActivity(intent)
+                            }
+                        )
+                        
+                        Divider(modifier = Modifier.padding(horizontal = 16.dp))
+                        SettingsItem(
+                            icon = Icons.Outlined.Note,
+                            title = "NotesVault",
+                            subtitle = "Secure Notes App",
+                            onClick = {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/harshal20m/NotesVault"))
+                                context.startActivity(intent)
+                            }
+                        )
+                        
+                        Divider(modifier = Modifier.padding(horizontal = 16.dp))
+                        SettingsItem(
+                            icon = Icons.Outlined.Star,
+                            title = "Star this Repository",
+                            subtitle = "Show your support ⭐",
+                            onClick = {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/harshal20m/DSAFUN"))
+                                context.startActivity(intent)
+                            }
+                        )
                     }
-                )
-                
-                SettingsItem(
-                    icon = Icons.Default.Note,
-                    title = "NotesVault",
-                    subtitle = "Secure Notes App",
-                    onClick = {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/harshal20m/NotesVault"))
-                        context.startActivity(intent)
-                    }
-                )
-                
-                SettingsItem(
-                    icon = Icons.Default.Star,
-                    title = "Star this Repository",
-                    subtitle = "Show your support ⭐",
-                    onClick = {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/harshal20m/DSAFUN"))
-                        context.startActivity(intent)
-                    }
-                )
+                }
             }
             
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             
             // App Info Section
             SettingsSection(title = "App Info") {
-                SettingsItem(
-                    icon = Icons.Default.Info,
-                    title = "Version",
-                    subtitle = uiState.appVersion,
-                    onClick = { }
-                )
-                
-                SettingsItem(
-                    icon = Icons.Default.SmartToy,
-                    title = "Built With",
-                    subtitle = "IBM Bob - Agentic AI",
-                    onClick = { }
-                )
-                
-                SettingsItem(
-                    icon = Icons.Default.EmojiEvents,
-                    title = "Your Stats",
-                    subtitle = "Level ${uiState.currentLevel} • ${uiState.totalProblemsSolved} solved • ${uiState.currentStreak} day streak",
-                    onClick = { }
-                )
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                ) {
+                    Column {
+                        SettingsItem(
+                            icon = Icons.Outlined.Info,
+                            title = "Version",
+                            subtitle = uiState.appVersion,
+                            onClick = { }
+                        )
+                        
+                        Divider(modifier = Modifier.padding(horizontal = 16.dp))
+                        SettingsItem(
+                            icon = Icons.Outlined.SmartToy,
+                            title = "Built With",
+                            subtitle = "IBM Bob - Agentic AI",
+                            onClick = { }
+                        )
+                        
+                        Divider(modifier = Modifier.padding(horizontal = 16.dp))
+                        SettingsItem(
+                            icon = Icons.Outlined.EmojiEvents,
+                            title = "Your Stats",
+                            subtitle = "Level ${uiState.currentLevel} • ${uiState.totalProblemsSolved} solved • ${uiState.currentStreak} day streak",
+                            onClick = { }
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))

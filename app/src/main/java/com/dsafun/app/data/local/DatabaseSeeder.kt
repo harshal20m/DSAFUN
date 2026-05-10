@@ -11474,7 +11474,1539 @@ public:
             )
         )
         problemDao.insertProblem(middleCharacter)
+
+        // Problem 111: Second Largest Element
+        val secondLargestElement = ProblemEntity(
+            id = 111,
+            title = "Second Largest Element",
+            description = """
+                Given an array of integers nums, return the second largest distinct element.
+                
+                If no such element exists, return -1.
+            """.trimIndent(),
+            difficulty = "Easy",
+            topic = "Array",
+            constraints = """
+                • 1 <= nums.length <= 10⁴
+                • -10⁴ <= nums[i] <= 10⁴
+            """.trimIndent(),
+            examples = listOf(
+                Example(
+                    input = "nums = [3,7,2,9,4]",
+                    output = "7",
+                    explanation = "The largest element is 9, so the second largest distinct element is 7."
+                ),
+                Example(
+                    input = "nums = [5,5,5]",
+                    output = "-1",
+                    explanation = "There is no second largest distinct element."
+                )
+            ),
+            hints = listOf(
+                "Track both largest and second largest values.",
+                "Ignore duplicates of the current largest element."
+            ),
+            editorial = """
+                ## Approach: Two Best Values
+                
+                Maintain the largest and second largest distinct values while scanning once.
+                
+                **Complexity Analysis:**
+                • Time complexity: O(n)
+                • Space complexity: O(1)
+            """.trimIndent(),
+            timeEstimateMinutes = 15,
+            acceptanceRate = 88.0f,
+            xpReward = 15,
+            starterCode = mapOf(
+                "Kotlin" to """
+fun secondLargestElement(nums: IntArray): Int {
+    // Write your code here
+    
+}
+                """.trimIndent(),
+                "Java" to """
+class Solution {
+    public int secondLargestElement(int[] nums) {
+        // Write your code here
         
+    }
+}
+                """.trimIndent(),
+                "Python" to """
+def secondLargestElement(nums: List[int]) -> int:
+    # Write your code here
+    pass
+                """.trimIndent(),
+                "JavaScript" to """
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var secondLargestElement = function(nums) {
+    // Write your code here
+    
+};
+                """.trimIndent(),
+                "C++" to """
+class Solution {
+public:
+    int secondLargestElement(vector<int>& nums) {
+        // Write your code here
+        
+    }
+};
+                """.trimIndent()
+            ),
+            testCases = listOf(
+                TestCase(input = "[3,7,2,9,4]", expectedOutput = "7", isHidden = false),
+                TestCase(input = "[5,5,5]", expectedOutput = "-1", isHidden = false),
+                TestCase(input = "[1,2]", expectedOutput = "1", isHidden = true)
+            )
+        )
+        problemDao.insertProblem(secondLargestElement)
+
+        // Problem 112: Second Smallest Element
+        val secondSmallestElement = ProblemEntity(
+            id = 112,
+            title = "Second Smallest Element",
+            description = """
+                Given an array of integers nums, return the second smallest distinct element.
+                
+                If no such element exists, return -1.
+            """.trimIndent(),
+            difficulty = "Easy",
+            topic = "Array",
+            constraints = """
+                • 1 <= nums.length <= 10⁴
+                • -10⁴ <= nums[i] <= 10⁴
+            """.trimIndent(),
+            examples = listOf(
+                Example(
+                    input = "nums = [3,7,2,9,4]",
+                    output = "3",
+                    explanation = "The smallest element is 2, so the second smallest distinct element is 3."
+                ),
+                Example(
+                    input = "nums = [8,8]",
+                    output = "-1",
+                    explanation = "There is no second smallest distinct element."
+                )
+            ),
+            hints = listOf(
+                "Track both smallest and second smallest values.",
+                "Skip duplicates of the smallest value."
+            ),
+            editorial = """
+                ## Approach: Two Best Values
+                
+                Maintain the smallest and second smallest distinct values in one pass.
+                
+                **Complexity Analysis:**
+                • Time complexity: O(n)
+                • Space complexity: O(1)
+            """.trimIndent(),
+            timeEstimateMinutes = 15,
+            acceptanceRate = 88.0f,
+            xpReward = 15,
+            starterCode = mapOf(
+                "Kotlin" to """
+fun secondSmallestElement(nums: IntArray): Int {
+    // Write your code here
+    
+}
+                """.trimIndent(),
+                "Java" to """
+class Solution {
+    public int secondSmallestElement(int[] nums) {
+        // Write your code here
+        
+    }
+}
+                """.trimIndent(),
+                "Python" to """
+def secondSmallestElement(nums: List[int]) -> int:
+    # Write your code here
+    pass
+                """.trimIndent(),
+                "JavaScript" to """
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var secondSmallestElement = function(nums) {
+    // Write your code here
+    
+};
+                """.trimIndent(),
+                "C++" to """
+class Solution {
+public:
+    int secondSmallestElement(vector<int>& nums) {
+        // Write your code here
+        
+    }
+};
+                """.trimIndent()
+            ),
+            testCases = listOf(
+                TestCase(input = "[3,7,2,9,4]", expectedOutput = "3", isHidden = false),
+                TestCase(input = "[8,8]", expectedOutput = "-1", isHidden = false),
+                TestCase(input = "[2,1]", expectedOutput = "2", isHidden = true)
+            )
+        )
+        problemDao.insertProblem(secondSmallestElement)
+
+        // Problem 113: Count Odd Numbers
+        val countOddNumbers = ProblemEntity(
+            id = 113,
+            title = "Count Odd Numbers",
+            description = """
+                Given an array of integers nums, count how many numbers in the array are odd.
+            """.trimIndent(),
+            difficulty = "Easy",
+            topic = "Array",
+            constraints = """
+                • 1 <= nums.length <= 10⁴
+                • -10⁴ <= nums[i] <= 10⁴
+            """.trimIndent(),
+            examples = listOf(
+                Example(
+                    input = "nums = [1,2,3,4,5,6]",
+                    output = "3",
+                    explanation = "The odd numbers are 1, 3, and 5."
+                ),
+                Example(
+                    input = "nums = [2,4,6]",
+                    output = "0",
+                    explanation = "There are no odd numbers."
+                )
+            ),
+            hints = listOf(
+                "A number is odd if num % 2 != 0.",
+                "Traverse the array and increase the count for odd values."
+            ),
+            editorial = """
+                ## Approach: Counting
+                
+                Count all elements that are not divisible by 2.
+                
+                **Complexity Analysis:**
+                • Time complexity: O(n)
+                • Space complexity: O(1)
+            """.trimIndent(),
+            timeEstimateMinutes = 10,
+            acceptanceRate = 95.0f,
+            xpReward = 10,
+            starterCode = mapOf(
+                "Kotlin" to """
+fun countOddNumbers(nums: IntArray): Int {
+    // Write your code here
+    
+}
+                """.trimIndent(),
+                "Java" to """
+class Solution {
+    public int countOddNumbers(int[] nums) {
+        // Write your code here
+        
+    }
+}
+                """.trimIndent(),
+                "Python" to """
+def countOddNumbers(nums: List[int]) -> int:
+    # Write your code here
+    pass
+                """.trimIndent(),
+                "JavaScript" to """
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var countOddNumbers = function(nums) {
+    // Write your code here
+    
+};
+                """.trimIndent(),
+                "C++" to """
+class Solution {
+public:
+    int countOddNumbers(vector<int>& nums) {
+        // Write your code here
+        
+    }
+};
+                """.trimIndent()
+            ),
+            testCases = listOf(
+                TestCase(input = "[1,2,3,4,5,6]", expectedOutput = "3", isHidden = false),
+                TestCase(input = "[2,4,6]", expectedOutput = "0", isHidden = false),
+                TestCase(input = "[1,1,1]", expectedOutput = "3", isHidden = true)
+            )
+        )
+        problemDao.insertProblem(countOddNumbers)
+
+        // Problem 114: Sum of Negative Numbers
+        val sumNegativeNumbers = ProblemEntity(
+            id = 114,
+            title = "Sum of Negative Numbers",
+            description = """
+                Given an array of integers nums, return the sum of all negative numbers.
+            """.trimIndent(),
+            difficulty = "Easy",
+            topic = "Array",
+            constraints = """
+                • 1 <= nums.length <= 10⁴
+                • -10⁴ <= nums[i] <= 10⁴
+            """.trimIndent(),
+            examples = listOf(
+                Example(
+                    input = "nums = [1,-2,3,4,-1]",
+                    output = "-3",
+                    explanation = "Negative numbers are -2 and -1. Their sum is -3."
+                ),
+                Example(
+                    input = "nums = [5,2,1]",
+                    output = "0",
+                    explanation = "There are no negative numbers."
+                )
+            ),
+            hints = listOf(
+                "Only add a number if it is less than 0.",
+                "Use a running sum."
+            ),
+            editorial = """
+                ## Approach: Conditional Summation
+                
+                Traverse the array and add only negative values.
+                
+                **Complexity Analysis:**
+                • Time complexity: O(n)
+                • Space complexity: O(1)
+            """.trimIndent(),
+            timeEstimateMinutes = 10,
+            acceptanceRate = 95.0f,
+            xpReward = 10,
+            starterCode = mapOf(
+                "Kotlin" to """
+fun sumNegativeNumbers(nums: IntArray): Int {
+    // Write your code here
+    
+}
+                """.trimIndent(),
+                "Java" to """
+class Solution {
+    public int sumNegativeNumbers(int[] nums) {
+        // Write your code here
+        
+    }
+}
+                """.trimIndent(),
+                "Python" to """
+def sumNegativeNumbers(nums: List[int]) -> int:
+    # Write your code here
+    pass
+                """.trimIndent(),
+                "JavaScript" to """
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var sumNegativeNumbers = function(nums) {
+    // Write your code here
+    
+};
+                """.trimIndent(),
+                "C++" to """
+class Solution {
+public:
+    int sumNegativeNumbers(vector<int>& nums) {
+        // Write your code here
+        
+    }
+};
+                """.trimIndent()
+            ),
+            testCases = listOf(
+                TestCase(input = "[1,-2,3,4,-1]", expectedOutput = "-3", isHidden = false),
+                TestCase(input = "[5,2,1]", expectedOutput = "0", isHidden = false),
+                TestCase(input = "[-5,-5]", expectedOutput = "-10", isHidden = true)
+            )
+        )
+        problemDao.insertProblem(sumNegativeNumbers)
+
+        // Problem 117: Reverse String Manually
+        val reverseStringManually = ProblemEntity(
+            id = 117,
+            title = "Reverse String Manually",
+            description = """
+                Given a string s, return the reversed string.
+                
+                Solve it manually without using built-in reverse helpers.
+            """.trimIndent(),
+            difficulty = "Easy",
+            topic = "String",
+            constraints = """
+                • 0 <= s.length <= 10⁴
+            """.trimIndent(),
+            examples = listOf(
+                Example(
+                    input = "s = \"hello\"",
+                    output = "\"olleh\"",
+                    explanation = "Characters are reversed."
+                ),
+                Example(
+                    input = "s = \"abc\"",
+                    output = "\"cba\"",
+                    explanation = "Reverse order of characters."
+                )
+            ),
+            hints = listOf(
+                "Traverse from the end of the string toward the beginning.",
+                "Use a StringBuilder or char array."
+            ),
+            editorial = """
+                ## Approach: Backward Traversal
+                
+                Build the result by reading characters from the end to the start.
+                
+                **Complexity Analysis:**
+                • Time complexity: O(n)
+                • Space complexity: O(n)
+            """.trimIndent(),
+            timeEstimateMinutes = 10,
+            acceptanceRate = 95.0f,
+            xpReward = 10,
+            starterCode = mapOf(
+                "Kotlin" to """
+fun reverseStringManually(s: String): String {
+    // Write your code here
+    
+}
+                """.trimIndent(),
+                "Java" to """
+class Solution {
+    public String reverseStringManually(String s) {
+        // Write your code here
+        
+    }
+}
+                """.trimIndent(),
+                "Python" to """
+def reverseStringManually(s: str) -> str:
+    # Write your code here
+    pass
+                """.trimIndent(),
+                "JavaScript" to """
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var reverseStringManually = function(s) {
+    // Write your code here
+    
+};
+                """.trimIndent(),
+                "C++" to """
+class Solution {
+public:
+    string reverseStringManually(string s) {
+        // Write your code here
+        
+    }
+};
+                """.trimIndent()
+            ),
+            testCases = listOf(
+                TestCase(input = "hello", expectedOutput = "olleh", isHidden = false),
+                TestCase(input = "abc", expectedOutput = "cba", isHidden = false),
+                TestCase(input = "", expectedOutput = "", isHidden = true)
+            )
+        )
+        problemDao.insertProblem(reverseStringManually)
+
+        // Problem 118: Check Sorted Array
+        val checkSortedArray = ProblemEntity(
+            id = 118,
+            title = "Check Sorted Array",
+            description = """
+                Given an array of integers nums, return true if the array is sorted in non-decreasing order, otherwise return false.
+            """.trimIndent(),
+            difficulty = "Easy",
+            topic = "Array",
+            constraints = """
+                • 1 <= nums.length <= 10⁴
+                • -10⁴ <= nums[i] <= 10⁴
+            """.trimIndent(),
+            examples = listOf(
+                Example(
+                    input = "nums = [1,2,2,4]",
+                    output = "true",
+                    explanation = "The array is sorted in non-decreasing order."
+                ),
+                Example(
+                    input = "nums = [3,1,2]",
+                    output = "false",
+                    explanation = "3 > 1, so the array is not sorted."
+                )
+            ),
+            hints = listOf(
+                "Compare each element with the next one.",
+                "If nums[i] > nums[i+1] at any point, return false."
+            ),
+            editorial = """
+                ## Approach: Adjacent Comparison
+                
+                Check whether every adjacent pair is in the correct order.
+                
+                **Complexity Analysis:**
+                • Time complexity: O(n)
+                • Space complexity: O(1)
+            """.trimIndent(),
+            timeEstimateMinutes = 10,
+            acceptanceRate = 94.0f,
+            xpReward = 10,
+            starterCode = mapOf(
+                "Kotlin" to """
+fun checkSortedArray(nums: IntArray): Boolean {
+    // Write your code here
+    
+}
+                """.trimIndent(),
+                "Java" to """
+class Solution {
+    public boolean checkSortedArray(int[] nums) {
+        // Write your code here
+        
+    }
+}
+                """.trimIndent(),
+                "Python" to """
+def checkSortedArray(nums: List[int]) -> bool:
+    # Write your code here
+    pass
+                """.trimIndent(),
+                "JavaScript" to """
+/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+var checkSortedArray = function(nums) {
+    // Write your code here
+    
+};
+                """.trimIndent(),
+                "C++" to """
+class Solution {
+public:
+    bool checkSortedArray(vector<int>& nums) {
+        // Write your code here
+        
+    }
+};
+                """.trimIndent()
+            ),
+            testCases = listOf(
+                TestCase(input = "[1,2,2,4]", expectedOutput = "true", isHidden = false),
+                TestCase(input = "[3,1,2]", expectedOutput = "false", isHidden = false),
+                TestCase(input = "[5]", expectedOutput = "true", isHidden = true)
+            )
+        )
+        problemDao.insertProblem(checkSortedArray)
+
+        // Problem 120: First Non-Repeating Character
+        val firstNonRepeatingCharacter = ProblemEntity(
+            id = 120,
+            title = "First Non-Repeating Character",
+            description = """
+                Given a string s, return the first character that appears exactly once.
+                
+                If no such character exists, return "#".
+            """.trimIndent(),
+            difficulty = "Easy",
+            topic = "String",
+            constraints = """
+                • 1 <= s.length <= 10⁴
+                • s contains lowercase English letters
+            """.trimIndent(),
+            examples = listOf(
+                Example(
+                    input = "s = \"leetcode\"",
+                    output = "\"l\"",
+                    explanation = "l is the first character that appears once."
+                ),
+                Example(
+                    input = "s = \"aabb\"",
+                    output = "\"#\"",
+                    explanation = "All characters repeat."
+                )
+            ),
+            hints = listOf(
+                "First count the frequency of each character.",
+                "Then scan the string again to find the first character with frequency 1."
+            ),
+            editorial = """
+                ## Approach: Frequency Count + Second Pass
+                
+                Use two passes: one for counts and one for the first unique character.
+                
+                **Complexity Analysis:**
+                • Time complexity: O(n)
+                • Space complexity: O(1) for fixed alphabet
+            """.trimIndent(),
+            timeEstimateMinutes = 15,
+            acceptanceRate = 91.0f,
+            xpReward = 15,
+            starterCode = mapOf(
+                "Kotlin" to """
+fun firstNonRepeatingCharacter(s: String): String {
+    // Write your code here
+    
+}
+                """.trimIndent(),
+                "Java" to """
+class Solution {
+    public String firstNonRepeatingCharacter(String s) {
+        // Write your code here
+        
+    }
+}
+                """.trimIndent(),
+                "Python" to """
+def firstNonRepeatingCharacter(s: str) -> str:
+    # Write your code here
+    pass
+                """.trimIndent(),
+                "JavaScript" to """
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var firstNonRepeatingCharacter = function(s) {
+    // Write your code here
+    
+};
+                """.trimIndent(),
+                "C++" to """
+class Solution {
+public:
+    string firstNonRepeatingCharacter(string s) {
+        // Write your code here
+        
+    }
+};
+                """.trimIndent()
+            ),
+            testCases = listOf(
+                TestCase(input = "leetcode", expectedOutput = "l", isHidden = false),
+                TestCase(input = "aabb", expectedOutput = "#", isHidden = false),
+                TestCase(input = "loveleetcode", expectedOutput = "v", isHidden = true)
+            )
+        )
+        problemDao.insertProblem(firstNonRepeatingCharacter)
+
+        // Problem 121: Check if Array Contains Target
+        val containsTarget = ProblemEntity(
+            id = 121,
+            title = "Check if Array Contains Target",
+            description = """
+                Given an array of integers nums and an integer target, return true if target exists in the array, otherwise return false.
+            """.trimIndent(),
+            difficulty = "Easy",
+            topic = "Array",
+            constraints = """
+                • 1 <= nums.length <= 10⁴
+                • -10⁴ <= nums[i], target <= 10⁴
+            """.trimIndent(),
+            examples = listOf(
+                Example(
+                    input = "nums = [4,2,7,1], target = 7",
+                    output = "true",
+                    explanation = "7 is present in the array."
+                ),
+                Example(
+                    input = "nums = [4,2,7,1], target = 5",
+                    output = "false",
+                    explanation = "5 is not present in the array."
+                )
+            ),
+            hints = listOf(
+                "Traverse the array and compare each value with target.",
+                "Return early when you find a match."
+            ),
+            editorial = """
+                ## Approach: Linear Search
+                
+                Scan the array from left to right until target is found.
+                
+                **Complexity Analysis:**
+                • Time complexity: O(n)
+                • Space complexity: O(1)
+            """.trimIndent(),
+            timeEstimateMinutes = 10,
+            acceptanceRate = 96.0f,
+            xpReward = 10,
+            starterCode = mapOf(
+                "Kotlin" to """
+fun containsTarget(nums: IntArray, target: Int): Boolean {
+    // Write your code here
+    
+}
+                """.trimIndent(),
+                "Java" to """
+class Solution {
+    public boolean containsTarget(int[] nums, int target) {
+        // Write your code here
+        
+    }
+}
+                """.trimIndent(),
+                "Python" to """
+def containsTarget(nums: List[int], target: int) -> bool:
+    # Write your code here
+    pass
+                """.trimIndent(),
+                "JavaScript" to """
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {boolean}
+ */
+var containsTarget = function(nums, target) {
+    // Write your code here
+    
+};
+                """.trimIndent(),
+                "C++" to """
+class Solution {
+public:
+    bool containsTarget(vector<int>& nums, int target) {
+        // Write your code here
+        
+    }
+};
+                """.trimIndent()
+            ),
+            testCases = listOf(
+                TestCase(input = "[4,2,7,1]\n7", expectedOutput = "true", isHidden = false),
+                TestCase(input = "[4,2,7,1]\n5", expectedOutput = "false", isHidden = false),
+                TestCase(input = "[9]\n9", expectedOutput = "true", isHidden = true)
+            )
+        )
+        problemDao.insertProblem(containsTarget)
+
+        // Problem 122: Find Index of Target
+        val findIndexOfTarget = ProblemEntity(
+            id = 122,
+            title = "Find Index of Target",
+            description = """
+                Given an array of integers nums and an integer target, return the index of the first occurrence of target.
+                
+                If target does not exist, return -1.
+            """.trimIndent(),
+            difficulty = "Easy",
+            topic = "Array",
+            constraints = """
+                • 1 <= nums.length <= 10⁴
+                • -10⁴ <= nums[i], target <= 10⁴
+            """.trimIndent(),
+            examples = listOf(
+                Example(
+                    input = "nums = [5,3,7,3], target = 3",
+                    output = "1",
+                    explanation = "The first 3 appears at index 1."
+                ),
+                Example(
+                    input = "nums = [5,3,7,3], target = 9",
+                    output = "-1",
+                    explanation = "9 is not in the array."
+                )
+            ),
+            hints = listOf(
+                "Traverse with index.",
+                "Return the first index where nums[i] == target."
+            ),
+            editorial = """
+                ## Approach: Indexed Linear Scan
+                
+                Check elements in order and return the first matching index.
+                
+                **Complexity Analysis:**
+                • Time complexity: O(n)
+                • Space complexity: O(1)
+            """.trimIndent(),
+            timeEstimateMinutes = 10,
+            acceptanceRate = 95.0f,
+            xpReward = 10,
+            starterCode = mapOf(
+                "Kotlin" to """
+fun findIndexOfTarget(nums: IntArray, target: Int): Int {
+    // Write your code here
+    
+}
+                """.trimIndent(),
+                "Java" to """
+class Solution {
+    public int findIndexOfTarget(int[] nums, int target) {
+        // Write your code here
+        
+    }
+}
+                """.trimIndent(),
+                "Python" to """
+def findIndexOfTarget(nums: List[int], target: int) -> int:
+    # Write your code here
+    pass
+                """.trimIndent(),
+                "JavaScript" to """
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ */
+var findIndexOfTarget = function(nums, target) {
+    // Write your code here
+    
+};
+                """.trimIndent(),
+                "C++" to """
+class Solution {
+public:
+    int findIndexOfTarget(vector<int>& nums, int target) {
+        // Write your code here
+        
+    }
+};
+                """.trimIndent()
+            ),
+            testCases = listOf(
+                TestCase(input = "[5,3,7,3]\n3", expectedOutput = "1", isHidden = false),
+                TestCase(input = "[5,3,7,3]\n9", expectedOutput = "-1", isHidden = false),
+                TestCase(input = "[8]\n8", expectedOutput = "0", isHidden = true)
+            )
+        )
+        problemDao.insertProblem(findIndexOfTarget)
+
+        // Problem 123: Count Numbers Greater Than Target
+        val countGreaterThanTarget = ProblemEntity(
+            id = 123,
+            title = "Count Numbers Greater Than Target",
+            description = """
+                Given an array of integers nums and an integer target, count how many elements are strictly greater than target.
+            """.trimIndent(),
+            difficulty = "Easy",
+            topic = "Array",
+            constraints = """
+                • 1 <= nums.length <= 10⁴
+                • -10⁴ <= nums[i], target <= 10⁴
+            """.trimIndent(),
+            examples = listOf(
+                Example(
+                    input = "nums = [1,5,8,2,9], target = 4",
+                    output = "3",
+                    explanation = "The numbers 5, 8, and 9 are greater than 4."
+                ),
+                Example(
+                    input = "nums = [1,2,3], target = 5",
+                    output = "0",
+                    explanation = "No element is greater than 5."
+                )
+            ),
+            hints = listOf(
+                "Compare each number with target.",
+                "Increase the count only when nums[i] > target."
+            ),
+            editorial = """
+                ## Approach: Conditional Counting
+                
+                One pass through the array is enough.
+                
+                **Complexity Analysis:**
+                • Time complexity: O(n)
+                • Space complexity: O(1)
+            """.trimIndent(),
+            timeEstimateMinutes = 10,
+            acceptanceRate = 95.0f,
+            xpReward = 10,
+            starterCode = mapOf(
+                "Kotlin" to """
+fun countGreaterThanTarget(nums: IntArray, target: Int): Int {
+    // Write your code here
+    
+}
+                """.trimIndent(),
+                "Java" to """
+class Solution {
+    public int countGreaterThanTarget(int[] nums, int target) {
+        // Write your code here
+        
+    }
+}
+                """.trimIndent(),
+                "Python" to """
+def countGreaterThanTarget(nums: List[int], target: int) -> int:
+    # Write your code here
+    pass
+                """.trimIndent(),
+                "JavaScript" to """
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ */
+var countGreaterThanTarget = function(nums, target) {
+    // Write your code here
+    
+};
+                """.trimIndent(),
+                "C++" to """
+class Solution {
+public:
+    int countGreaterThanTarget(vector<int>& nums, int target) {
+        // Write your code here
+        
+    }
+};
+                """.trimIndent()
+            ),
+            testCases = listOf(
+                TestCase(input = "[1,5,8,2,9]\n4", expectedOutput = "3", isHidden = false),
+                TestCase(input = "[1,2,3]\n5", expectedOutput = "0", isHidden = false),
+                TestCase(input = "[7,7,7]\n6", expectedOutput = "3", isHidden = true)
+            )
+        )
+        problemDao.insertProblem(countGreaterThanTarget)
+
+        // Problem 124: Toggle Character Case
+        val toggleCharacterCase = ProblemEntity(
+            id = 124,
+            title = "Toggle Character Case",
+            description = """
+                Given a string s containing English letters, convert uppercase letters to lowercase and lowercase letters to uppercase.
+                
+                Non-letter characters should remain unchanged.
+            """.trimIndent(),
+            difficulty = "Easy",
+            topic = "String",
+            constraints = """
+                • 1 <= s.length <= 10⁴
+                • s contains letters, digits, and spaces
+            """.trimIndent(),
+            examples = listOf(
+                Example(
+                    input = "s = \"HeLLo\"",
+                    output = "\"hEllO\"",
+                    explanation = "Each letter changes its case."
+                ),
+                Example(
+                    input = "s = \"abc XYZ\"",
+                    output = "\"ABC xyz\"",
+                    explanation = "Lowercase becomes uppercase and uppercase becomes lowercase."
+                )
+            ),
+            hints = listOf(
+                "Check whether a character is uppercase or lowercase.",
+                "Digits and spaces should be copied as-is."
+            ),
+            editorial = """
+                ## Approach: Character Conversion
+                
+                Process each character and flip its case when it is a letter.
+                
+                **Complexity Analysis:**
+                • Time complexity: O(n)
+                • Space complexity: O(n)
+            """.trimIndent(),
+            timeEstimateMinutes = 12,
+            acceptanceRate = 92.0f,
+            xpReward = 10,
+            starterCode = mapOf(
+                "Kotlin" to """
+fun toggleCharacterCase(s: String): String {
+    // Write your code here
+    
+}
+                """.trimIndent(),
+                "Java" to """
+class Solution {
+    public String toggleCharacterCase(String s) {
+        // Write your code here
+        
+    }
+}
+                """.trimIndent(),
+                "Python" to """
+def toggleCharacterCase(s: str) -> str:
+    # Write your code here
+    pass
+                """.trimIndent(),
+                "JavaScript" to """
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var toggleCharacterCase = function(s) {
+    // Write your code here
+    
+};
+                """.trimIndent(),
+                "C++" to """
+class Solution {
+public:
+    string toggleCharacterCase(string s) {
+        // Write your code here
+        
+    }
+};
+                """.trimIndent()
+            ),
+            testCases = listOf(
+                TestCase(input = "HeLLo", expectedOutput = "hEllO", isHidden = false),
+                TestCase(input = "abc XYZ", expectedOutput = "ABC xyz", isHidden = false),
+                TestCase(input = "a1B", expectedOutput = "A1b", isHidden = true)
+            )
+        )
+        problemDao.insertProblem(toggleCharacterCase)
+
+        // Problem 125: Count Special Characters
+        val countSpecialCharacters = ProblemEntity(
+            id = 125,
+            title = "Count Special Characters",
+            description = """
+                Given a string s, count how many characters are neither letters nor digits nor spaces.
+            """.trimIndent(),
+            difficulty = "Easy",
+            topic = "String",
+            constraints = """
+                • 1 <= s.length <= 10⁴
+                • s contains printable ASCII characters
+            """.trimIndent(),
+            examples = listOf(
+                Example(
+                    input = "s = \"a@b#1\"",
+                    output = "2",
+                    explanation = "The special characters are @ and #."
+                ),
+                Example(
+                    input = "s = \"Hello 123\"",
+                    output = "0",
+                    explanation = "All characters are letters, digits, or spaces."
+                )
+            ),
+            hints = listOf(
+                "Letters, digits, and spaces are not special characters.",
+                "Count everything else."
+            ),
+            editorial = """
+                ## Approach: Character Classification
+                
+                Traverse the string and count only symbols/punctuation characters.
+                
+                **Complexity Analysis:**
+                • Time complexity: O(n)
+                • Space complexity: O(1)
+            """.trimIndent(),
+            timeEstimateMinutes = 10,
+            acceptanceRate = 93.0f,
+            xpReward = 10,
+            starterCode = mapOf(
+                "Kotlin" to """
+fun countSpecialCharacters(s: String): Int {
+    // Write your code here
+    
+}
+                """.trimIndent(),
+                "Java" to """
+class Solution {
+    public int countSpecialCharacters(String s) {
+        // Write your code here
+        
+    }
+}
+                """.trimIndent(),
+                "Python" to """
+def countSpecialCharacters(s: str) -> int:
+    # Write your code here
+    pass
+                """.trimIndent(),
+                "JavaScript" to """
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var countSpecialCharacters = function(s) {
+    // Write your code here
+    
+};
+                """.trimIndent(),
+                "C++" to """
+class Solution {
+public:
+    int countSpecialCharacters(string s) {
+        // Write your code here
+        
+    }
+};
+                """.trimIndent()
+            ),
+            testCases = listOf(
+                TestCase(input = "a@b#1", expectedOutput = "2", isHidden = false),
+                TestCase(input = "Hello 123", expectedOutput = "0", isHidden = false),
+                TestCase(input = "! !", expectedOutput = "2", isHidden = true)
+            )
+        )
+        problemDao.insertProblem(countSpecialCharacters)
+
+        // Problem 126: Remove Spaces from String
+        val removeSpacesFromString = ProblemEntity(
+            id = 126,
+            title = "Remove Spaces from String",
+            description = """
+                Given a string s, remove all spaces and return the resulting string.
+            """.trimIndent(),
+            difficulty = "Easy",
+            topic = "String",
+            constraints = """
+                • 0 <= s.length <= 10⁴
+                • s contains letters and spaces
+            """.trimIndent(),
+            examples = listOf(
+                Example(
+                    input = "s = \"a b c\"",
+                    output = "\"abc\"",
+                    explanation = "All spaces are removed."
+                ),
+                Example(
+                    input = "s = \" hello world \"",
+                    output = "\"helloworld\"",
+                    explanation = "Leading, trailing, and middle spaces are removed."
+                )
+            ),
+            hints = listOf(
+                "Traverse the string and append only non-space characters.",
+                "A StringBuilder is useful here."
+            ),
+            editorial = """
+                ## Approach: Filter Non-Space Characters
+                
+                Build a new string using only characters that are not spaces.
+                
+                **Complexity Analysis:**
+                • Time complexity: O(n)
+                • Space complexity: O(n)
+            """.trimIndent(),
+            timeEstimateMinutes = 10,
+            acceptanceRate = 96.0f,
+            xpReward = 10,
+            starterCode = mapOf(
+                "Kotlin" to """
+fun removeSpacesFromString(s: String): String {
+    // Write your code here
+    
+}
+                """.trimIndent(),
+                "Java" to """
+class Solution {
+    public String removeSpacesFromString(String s) {
+        // Write your code here
+        
+    }
+}
+                """.trimIndent(),
+                "Python" to """
+def removeSpacesFromString(s: str) -> str:
+    # Write your code here
+    pass
+                """.trimIndent(),
+                "JavaScript" to """
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var removeSpacesFromString = function(s) {
+    // Write your code here
+    
+};
+                """.trimIndent(),
+                "C++" to """
+class Solution {
+public:
+    string removeSpacesFromString(string s) {
+        // Write your code here
+        
+    }
+};
+                """.trimIndent()
+            ),
+            testCases = listOf(
+                TestCase(input = "a b c", expectedOutput = "abc", isHidden = false),
+                TestCase(input = " hello world ", expectedOutput = "helloworld", isHidden = false),
+                TestCase(input = "   ", expectedOutput = "", isHidden = true)
+            )
+        )
+        problemDao.insertProblem(removeSpacesFromString)
+
+        // Problem 127: Sum of Digits in String
+        val sumOfDigitsInString = ProblemEntity(
+            id = 127,
+            title = "Sum of Digits in String",
+            description = """
+                Given a string s containing letters and digits, return the sum of all digit characters in the string.
+            """.trimIndent(),
+            difficulty = "Easy",
+            topic = "String",
+            constraints = """
+                • 1 <= s.length <= 10⁴
+                • s contains English letters and digits
+            """.trimIndent(),
+            examples = listOf(
+                Example(
+                    input = "s = \"a1b2c3\"",
+                    output = "6",
+                    explanation = "Digits are 1, 2, and 3. Their sum is 6."
+                ),
+                Example(
+                    input = "s = \"abc\"",
+                    output = "0",
+                    explanation = "There are no digits."
+                )
+            ),
+            hints = listOf(
+                "Check whether each character is a digit.",
+                "Convert digit characters to numbers before adding."
+            ),
+            editorial = """
+                ## Approach: Digit Extraction
+                
+                Traverse the string and add digit values when encountered.
+                
+                **Complexity Analysis:**
+                • Time complexity: O(n)
+                • Space complexity: O(1)
+            """.trimIndent(),
+            timeEstimateMinutes = 12,
+            acceptanceRate = 94.0f,
+            xpReward = 10,
+            starterCode = mapOf(
+                "Kotlin" to """
+fun sumOfDigitsInString(s: String): Int {
+    // Write your code here
+    
+}
+                """.trimIndent(),
+                "Java" to """
+class Solution {
+    public int sumOfDigitsInString(String s) {
+        // Write your code here
+        
+    }
+}
+                """.trimIndent(),
+                "Python" to """
+def sumOfDigitsInString(s: str) -> int:
+    # Write your code here
+    pass
+                """.trimIndent(),
+                "JavaScript" to """
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var sumOfDigitsInString = function(s) {
+    // Write your code here
+    
+};
+                """.trimIndent(),
+                "C++" to """
+class Solution {
+public:
+    int sumOfDigitsInString(string s) {
+        // Write your code here
+        
+    }
+};
+                """.trimIndent()
+            ),
+            testCases = listOf(
+                TestCase(input = "a1b2c3", expectedOutput = "6", isHidden = false),
+                TestCase(input = "abc", expectedOutput = "0", isHidden = false),
+                TestCase(input = "9x9", expectedOutput = "18", isHidden = true)
+            )
+        )
+        problemDao.insertProblem(sumOfDigitsInString)
+
+        // Problem 128: Check Same First and Last Character
+        val sameFirstAndLastCharacter = ProblemEntity(
+            id = 128,
+            title = "Check Same First and Last Character",
+            description = """
+                Given a string s, return true if the first and last character are the same, otherwise return false.
+                
+                If the string is empty, return false.
+            """.trimIndent(),
+            difficulty = "Easy",
+            topic = "String",
+            constraints = """
+                • 0 <= s.length <= 10⁴
+            """.trimIndent(),
+            examples = listOf(
+                Example(
+                    input = "s = \"level\"",
+                    output = "true",
+                    explanation = "The first and last character are both 'l'."
+                ),
+                Example(
+                    input = "s = \"hello\"",
+                    output = "false",
+                    explanation = "The first character is 'h' and the last is 'o'."
+                )
+            ),
+            hints = listOf(
+                "Handle the empty string as a special case.",
+                "Compare s[0] with s[s.length - 1]."
+            ),
+            editorial = """
+                ## Approach: Direct Comparison
+                
+                Compare the first and last character when the string is non-empty.
+                
+                **Complexity Analysis:**
+                • Time complexity: O(1)
+                • Space complexity: O(1)
+            """.trimIndent(),
+            timeEstimateMinutes = 8,
+            acceptanceRate = 97.0f,
+            xpReward = 10,
+            starterCode = mapOf(
+                "Kotlin" to """
+fun sameFirstAndLastCharacter(s: String): Boolean {
+    // Write your code here
+    
+}
+                """.trimIndent(),
+                "Java" to """
+class Solution {
+    public boolean sameFirstAndLastCharacter(String s) {
+        // Write your code here
+        
+    }
+}
+                """.trimIndent(),
+                "Python" to """
+def sameFirstAndLastCharacter(s: str) -> bool:
+    # Write your code here
+    pass
+                """.trimIndent(),
+                "JavaScript" to """
+/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var sameFirstAndLastCharacter = function(s) {
+    // Write your code here
+    
+};
+                """.trimIndent(),
+                "C++" to """
+class Solution {
+public:
+    bool sameFirstAndLastCharacter(string s) {
+        // Write your code here
+        
+    }
+};
+                """.trimIndent()
+            ),
+            testCases = listOf(
+                TestCase(input = "level", expectedOutput = "true", isHidden = false),
+                TestCase(input = "hello", expectedOutput = "false", isHidden = false),
+                TestCase(input = "", expectedOutput = "false", isHidden = true)
+            )
+        )
+        problemDao.insertProblem(sameFirstAndLastCharacter)
+
+        // Problem 129: Replace Character with Another
+        val replaceCharacter = ProblemEntity(
+            id = 129,
+            title = "Replace Character with Another",
+            description = """
+                Given a string s and two characters oldChar and newChar, replace all occurrences of oldChar with newChar and return the new string.
+            """.trimIndent(),
+            difficulty = "Easy",
+            topic = "String",
+            constraints = """
+                • 0 <= s.length <= 10⁴
+                • oldChar and newChar are single characters
+            """.trimIndent(),
+            examples = listOf(
+                Example(
+                    input = "s = \"banana\", oldChar = 'a', newChar = 'o'",
+                    output = "\"bonono\"",
+                    explanation = "Every 'a' is replaced by 'o'."
+                ),
+                Example(
+                    input = "s = \"hello\", oldChar = 'x', newChar = 'y'",
+                    output = "\"hello\"",
+                    explanation = "There is no 'x', so the string stays the same."
+                )
+            ),
+            hints = listOf(
+                "Build a new string character by character.",
+                "Replace only when the current character matches oldChar."
+            ),
+            editorial = """
+                ## Approach: Conditional Replacement
+                
+                Traverse the string and append either the new or old character.
+                
+                **Complexity Analysis:**
+                • Time complexity: O(n)
+                • Space complexity: O(n)
+            """.trimIndent(),
+            timeEstimateMinutes = 12,
+            acceptanceRate = 95.0f,
+            xpReward = 10,
+            starterCode = mapOf(
+                "Kotlin" to """
+fun replaceCharacter(s: String, oldChar: Char, newChar: Char): String {
+    // Write your code here
+    
+}
+                """.trimIndent(),
+                "Java" to """
+class Solution {
+    public String replaceCharacter(String s, char oldChar, char newChar) {
+        // Write your code here
+        
+    }
+}
+                """.trimIndent(),
+                "Python" to """
+def replaceCharacter(s: str, oldChar: str, newChar: str) -> str:
+    # Write your code here
+    pass
+                """.trimIndent(),
+                "JavaScript" to """
+/**
+ * @param {string} s
+ * @param {character} oldChar
+ * @param {character} newChar
+ * @return {string}
+ */
+var replaceCharacter = function(s, oldChar, newChar) {
+    // Write your code here
+    
+};
+                """.trimIndent(),
+                "C++" to """
+class Solution {
+public:
+    string replaceCharacter(string s, char oldChar, char newChar) {
+        // Write your code here
+        
+    }
+};
+                """.trimIndent()
+            ),
+            testCases = listOf(
+                TestCase(input = "banana\na\no", expectedOutput = "bonono", isHidden = false),
+                TestCase(input = "hello\nx\ny", expectedOutput = "hello", isHidden = false),
+                TestCase(input = "aaaa\na\nb", expectedOutput = "bbbb", isHidden = true)
+            )
+        )
+        problemDao.insertProblem(replaceCharacter)
+
+        // Problem 130: Count Matching Characters at Same Index
+        val countMatchingSameIndex = ProblemEntity(
+            id = 130,
+            title = "Count Matching Characters at Same Index",
+            description = """
+                Given two strings s1 and s2, count how many positions contain the same character in both strings.
+                
+                Compare only up to the length of the shorter string.
+            """.trimIndent(),
+            difficulty = "Easy",
+            topic = "String",
+            constraints = """
+                • 0 <= s1.length, s2.length <= 10⁴
+            """.trimIndent(),
+            examples = listOf(
+                Example(
+                    input = "s1 = \"apple\", s2 = \"apric\"",
+                    output = "2",
+                    explanation = "Characters match at indices 0 and 1."
+                ),
+                Example(
+                    input = "s1 = \"abc\", s2 = \"xyz\"",
+                    output = "0",
+                    explanation = "No positions have matching characters."
+                )
+            ),
+            hints = listOf(
+                "Loop until min(s1.length, s2.length).",
+                "Compare s1[i] and s2[i] at each position."
+            ),
+            editorial = """
+                ## Approach: Parallel Traversal
+                
+                Traverse both strings together and count equal characters at the same index.
+                
+                **Complexity Analysis:**
+                • Time complexity: O(min(n, m))
+                • Space complexity: O(1)
+            """.trimIndent(),
+            timeEstimateMinutes = 12,
+            acceptanceRate = 93.0f,
+            xpReward = 10,
+            starterCode = mapOf(
+                "Kotlin" to """
+fun countMatchingSameIndex(s1: String, s2: String): Int {
+    // Write your code here
+    
+}
+                """.trimIndent(),
+                "Java" to """
+class Solution {
+    public int countMatchingSameIndex(String s1, String s2) {
+        // Write your code here
+        
+    }
+}
+                """.trimIndent(),
+                "Python" to """
+def countMatchingSameIndex(s1: str, s2: str) -> int:
+    # Write your code here
+    pass
+                """.trimIndent(),
+                "JavaScript" to """
+/**
+ * @param {string} s1
+ * @param {string} s2
+ * @return {number}
+ */
+var countMatchingSameIndex = function(s1, s2) {
+    // Write your code here
+    
+};
+                """.trimIndent(),
+                "C++" to """
+class Solution {
+public:
+    int countMatchingSameIndex(string s1, string s2) {
+        // Write your code here
+        
+    }
+};
+                """.trimIndent()
+            ),
+            testCases = listOf(
+                TestCase(input = "apple\napric", expectedOutput = "2", isHidden = false),
+                TestCase(input = "abc\nxyz", expectedOutput = "0", isHidden = false),
+                TestCase(input = "same\nsame", expectedOutput = "4", isHidden = true)
+            )
+        )
+        problemDao.insertProblem(countMatchingSameIndex)
+
     }
         private suspend fun seedBadges() {
             val badges = listOf(

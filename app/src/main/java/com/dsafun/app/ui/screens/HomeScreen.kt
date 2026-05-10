@@ -94,6 +94,7 @@ fun HomeScreen(
             stats.dailyChallenge?.let { challenge ->
                 DailyChallengeCard(
                     problem = challenge,
+                    isCompleted = stats.isDailyChallengeCompleted,
                     onClick = { onNavigateToProblem(challenge.id) }
                 )
             }
@@ -219,6 +220,7 @@ private fun StreakCounter(
 @Composable
 private fun DailyChallengeCard(
     problem: com.dsafun.app.domain.model.Problem,
+    isCompleted: Boolean,
     onClick: () -> Unit
 ) {
     Card(
@@ -226,7 +228,11 @@ private fun DailyChallengeCard(
             .fillMaxWidth()
             .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
+            containerColor = if (isCompleted) {
+                MaterialTheme.colorScheme.secondaryContainer
+            } else {
+                MaterialTheme.colorScheme.primaryContainer
+            }
         )
     ) {
         Column(
@@ -239,27 +245,43 @@ private fun DailyChallengeCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "⭐ Daily Challenge",
-                    style = MaterialTheme.typography.labelLarge.copy(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-                Surface(
-                    color = when (problem.difficulty) {
-                        "Easy" -> Color(0xFF10B981)
-                        "Medium" -> Color(0xFFF59E0B)
-                        else -> Color(0xFFEF4444)
-                    },
-                    shape = RoundedCornerShape(4.dp)
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = problem.difficulty,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.White,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        text = if (isCompleted) "✓" else "⭐",
+                        style = MaterialTheme.typography.titleMedium
                     )
+                    Text(
+                        text = if (isCompleted) "Daily Challenge - Completed!" else "Daily Challenge",
+                        style = MaterialTheme.typography.labelLarge.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        color = if (isCompleted) {
+                            MaterialTheme.colorScheme.onSecondaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.onPrimaryContainer
+                        }
+                    )
+                }
+                
+                if (!isCompleted) {
+                    Surface(
+                        color = when (problem.difficulty) {
+                            "Easy" -> Color(0xFF10B981)
+                            "Medium" -> Color(0xFFF59E0B)
+                            else -> Color(0xFFEF4444)
+                        },
+                        shape = RoundedCornerShape(4.dp)
+                    ) {
+                        Text(
+                            text = problem.difficulty,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.White,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                    }
                 }
             }
             
@@ -270,13 +292,21 @@ private fun DailyChallengeCard(
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold
                 ),
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                color = if (isCompleted) {
+                    MaterialTheme.colorScheme.onSecondaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                }
             )
             
             Text(
                 text = problem.topic,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                color = if (isCompleted) {
+                    MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
+                } else {
+                    MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                }
             )
         }
     }

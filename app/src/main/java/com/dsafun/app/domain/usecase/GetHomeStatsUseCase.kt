@@ -38,6 +38,12 @@ class GetHomeStatsUseCase @Inject constructor(
             // Get daily challenge (deterministic based on day of year)
             val dailyChallenge = getDailyChallenge()
             
+            // Check if daily challenge is completed
+            val solvedProblems = userSolutionDao.getSolvedProblemsSync()
+            val isDailyChallengeCompleted = dailyChallenge?.let { challenge ->
+                solvedProblems.any { it.problemId == challenge.id && it.status == "SOLVED" }
+            } ?: false
+            
             // Get topic progress
             val topicProgress = getTopicProgress()
             
@@ -57,6 +63,7 @@ class GetHomeStatsUseCase @Inject constructor(
                 level = userStats.currentLevel,
                 xpToNextLevel = xpToNextLevel,
                 dailyChallenge = dailyChallenge,
+                isDailyChallengeCompleted = isDailyChallengeCompleted,
                 recentSolutions = recentSolutions,
                 topicProgresses = topicProgress,
                 freezeTokens = userStats.freezeTokens
@@ -108,6 +115,7 @@ data class HomeStats(
     val level: Int,
     val xpToNextLevel: Int,
     val dailyChallenge: Problem?,
+    val isDailyChallengeCompleted: Boolean,
     val recentSolutions: List<UserSolutionEntity>,
     val topicProgresses: List<TopicProgress>,
     val freezeTokens: Int

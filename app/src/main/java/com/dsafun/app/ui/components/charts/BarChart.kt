@@ -67,7 +67,7 @@ fun BarChart(
         
         val barHeight = 32.dp.toPx()
         val barSpacing = 18.dp.toPx()
-        val labelWidth = 80.dp.toPx()
+        val labelWidth = 100.dp.toPx() // Increased from 80dp to 100dp for longer language names
         val chartWidth = size.width - labelWidth - 60.dp.toPx()
         
         data.forEachIndexed { index, item ->

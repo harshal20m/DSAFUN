@@ -30,6 +30,7 @@ import androidx.navigation.navArgument
 import com.dsafun.app.data.local.datastore.UserPreferencesDataStore
 import com.dsafun.app.ui.screens.AnalyticsScreen
 import com.dsafun.app.ui.screens.HomeScreen
+import com.dsafun.app.ui.screens.LeetCodeScreen
 import com.dsafun.app.ui.screens.ProblemsScreen
 import com.dsafun.app.ui.screens.SettingsScreen
 import com.dsafun.app.ui.screens.codeeditor.CodeEditorScreen
@@ -157,7 +158,8 @@ fun MainAppContent(
                     currentRoute = currentRoute,
                     onNavigate = { route ->
                         navController.navigate(route) {
-                            popUpTo(navController.graph.startDestinationId) {
+                            // Pop everything up to the start destination
+                            popUpTo(Screen.Home.route) {
                                 saveState = true
                             }
                             launchSingleTop = true
@@ -176,34 +178,42 @@ fun MainAppContent(
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 bottomBar = {
-                    // Bottom bar with floating timer widget on top
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        // Floating Timer Widget - Positioned above bottom nav
-                        if (currentRoute != Screen.Timer.route) {
-                            FloatingTimerWidget(
-                                timerSeconds = timerUiState.remainingSeconds,  // Show remaining time (countdown)
-                                isVisible = timerUiState.isFloatingWidgetVisible &&
-                                           (timerUiState.timerState == TimerState.RUNNING || timerUiState.timerState == TimerState.PAUSED),
-                                onDismiss = { timerViewModel.hideFloatingWidget() },
-                                modifier = Modifier.fillMaxWidth()
+                    val hideBottomNavigation = currentRoute?.startsWith("problem_detail/") == true ||
+                        currentRoute?.startsWith("code_editor/") == true ||
+                        currentRoute == Screen.LeetCode.route ||
+                        currentRoute == Screen.CommonProblems.route
+
+                    if (!hideBottomNavigation) {
+                        // Bottom bar with floating timer widget on top
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            // Floating Timer Widget - Positioned above bottom nav
+                            if (currentRoute != Screen.Timer.route) {
+                                FloatingTimerWidget(
+                                    timerSeconds = timerUiState.remainingSeconds,  // Show remaining time (countdown)
+                                    isVisible = timerUiState.isFloatingWidgetVisible &&
+                                               (timerUiState.timerState == TimerState.RUNNING || timerUiState.timerState == TimerState.PAUSED),
+                                    onDismiss = { timerViewModel.hideFloatingWidget() },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
+
+                            BottomNavigationBar(
+                                currentRoute = currentRoute,
+                                onNavigate = { route ->
+                                    navController.navigate(route) {
+                                        // Pop everything up to the start destination
+                                        popUpTo(Screen.Home.route) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                }
                             )
                         }
-                        
-                        BottomNavigationBar(
-                            currentRoute = currentRoute,
-                            onNavigate = { route ->
-                                navController.navigate(route) {
-                                    popUpTo(navController.graph.startDestinationId) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            }
-                        )
                     }
                 }
             ) { innerPadding ->
@@ -246,8 +256,30 @@ fun NavigationGraph(
             ProblemsScreen(
                 onProblemClick = { problemId ->
                     navController.navigate(Screen.ProblemDetail.createRoute(problemId))
-                }
+                },
+                onLeetCodeClick = {
+                    navController.navigate(Screen.LeetCode.route)
+                },
+                onCommonProblemsClick = {
+                    navController.navigate(Screen.CommonProblems.route)
+                },
+                showCollectionsOnly = true
             )
+        }
+        composable(Screen.CommonProblems.route) {
+            ProblemsScreen(
+                onProblemClick = { problemId ->
+                    navController.navigate(Screen.ProblemDetail.createRoute(problemId))
+                },
+                onLeetCodeClick = {
+                    navController.navigate(Screen.LeetCode.route)
+                },
+                onCommonProblemsClick = {},
+                showCollectionsOnly = false
+            )
+        }
+        composable(Screen.LeetCode.route) {
+            LeetCodeScreen()
         }
         composable(
             route = Screen.ProblemDetail.route,
@@ -279,7 +311,13 @@ fun NavigationGraph(
             FocusTimerScreen(viewModel = timerViewModel)
         }
         composable(Screen.Analytics.route) {
-            AnalyticsScreen()
+            AnalyticsScreen(
+                onNavigateToStreak = {
+                    navController.navigate(Screen.Streak.route) {
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
         composable(Screen.Settings.route) {
             SettingsScreen()

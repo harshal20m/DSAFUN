@@ -1,12 +1,15 @@
 package com.dsafun.app.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,7 +30,8 @@ import com.dsafun.app.ui.viewmodel.TimeRange
 
 @Composable
 fun AnalyticsScreen(
-    viewModel: AnalyticsViewModel = hiltViewModel()
+    viewModel: AnalyticsViewModel = hiltViewModel(),
+    onNavigateToStreak: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val selectedTimeRange by viewModel.selectedTimeRange.collectAsState()
@@ -61,7 +65,8 @@ fun AnalyticsScreen(
                     data = state.data,
                     selectedTimeRange = selectedTimeRange,
                     onTimeRangeSelected = { viewModel.selectTimeRange(it) },
-                    getFilteredData = { viewModel.getFilteredWeeklyData(state.data) }
+                    getFilteredData = { viewModel.getFilteredWeeklyData(state.data) },
+                    onNavigateToStreak = onNavigateToStreak
                 )
             }
         }
@@ -189,7 +194,8 @@ private fun AnalyticsContent(
     data: AnalyticsData,
     selectedTimeRange: TimeRange,
     onTimeRangeSelected: (TimeRange) -> Unit,
-    getFilteredData: () -> AnalyticsData
+    getFilteredData: () -> AnalyticsData,
+    onNavigateToStreak: () -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -242,7 +248,78 @@ private fun AnalyticsContent(
             }
         }
 
-        // Section 2: Heatmap
+        // Section 2: Achievements & Badges Card
+        item {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp)
+                    .clickable { onNavigateToStreak() },
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                )
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        // Trophy Icon
+                        Surface(
+                            shape = RoundedCornerShape(12.dp),
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                            modifier = Modifier.size(56.dp)
+                        ) {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.EmojiEvents,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(32.dp)
+                                )
+                            }
+                        }
+                        
+                        // Text Content
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Text(
+                                text = "Achievements & Badges",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                            Text(
+                                text = "View your earned badges and milestones",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                            )
+                        }
+                    }
+                    
+                    // Arrow Icon
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowRight,
+                        contentDescription = "Navigate to badges",
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
+        }
+
+        // Section 3: Heatmap
         item {
             SectionHeader(title = "Your Activity")
             Card(
@@ -373,69 +450,107 @@ private fun AnalyticsContent(
         // Section 7: Personal Records
         item {
             SectionHeader(title = "Personal Records")
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+        }
+        
+        // Check if there are any records
+        val hasRecords = data.fastestSolves.easy != null ||
+                       data.fastestSolves.medium != null ||
+                       data.fastestSolves.hard != null
+        
+        if (!hasRecords) {
+            // Empty state for personal records
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
                 ) {
-                    val hasRecords = data.fastestSolves.easy != null ||
-                                   data.fastestSolves.medium != null ||
-                                   data.fastestSolves.hard != null
-                    
-                    if (!hasRecords) {
-                        // Empty state for personal records
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Text(
-                                text = "No records yet",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                                fontWeight = FontWeight.Medium
-                            )
-                            Text(
-                                text = "Solve problems to set your fastest times",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    } else {
-                        data.fastestSolves.easy?.let {
-                            PersonalRecordItem(
-                                difficulty = "Easy",
-                                problemName = it.problemName,
-                                time = it.timeSeconds,
-                                color = Color(0xFF10B981)
-                            )
-                        }
-                        data.fastestSolves.medium?.let {
-                            PersonalRecordItem(
-                                difficulty = "Medium",
-                                problemName = it.problemName,
-                                time = it.timeSeconds,
-                                color = Color(0xFFF59E0B)
-                            )
-                        }
-                        data.fastestSolves.hard?.let {
-                            PersonalRecordItem(
-                                difficulty = "Hard",
-                                problemName = it.problemName,
-                                time = it.timeSeconds,
-                                color = Color(0xFFEF4444)
-                            )
-                        }
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "No records yet",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = "Solve problems to set your fastest times",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }
+        } else {
+            // Lazy load personal records - scalable for future additions
+            data.fastestSolves.easy?.let { record ->
+                item {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        )
+                    ) {
+                        PersonalRecordItem(
+                            difficulty = "Easy",
+                            problemName = record.problemName,
+                            time = record.timeSeconds,
+                            color = Color(0xFF10B981),
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                }
+            }
+            
+            data.fastestSolves.medium?.let { record ->
+                item {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        )
+                    ) {
+                        PersonalRecordItem(
+                            difficulty = "Medium",
+                            problemName = record.problemName,
+                            time = record.timeSeconds,
+                            color = Color(0xFFF59E0B),
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                }
+            }
+            
+            data.fastestSolves.hard?.let { record ->
+                item {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        )
+                    ) {
+                        PersonalRecordItem(
+                            difficulty = "Hard",
+                            problemName = record.problemName,
+                            time = record.timeSeconds,
+                            color = Color(0xFFEF4444),
+                            modifier = Modifier.padding(16.dp)
+                        )
                     }
                 }
             }
@@ -543,10 +658,11 @@ private fun PersonalRecordItem(
     difficulty: String,
     problemName: String,
     time: Int,
-    color: Color
+    color: Color,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

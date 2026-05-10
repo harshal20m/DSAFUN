@@ -2,6 +2,8 @@ package com.dsafun.app.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dsafun.app.data.remote.RetrofitGitHubUpdateChecker
+import com.dsafun.app.data.remote.UpdateInfo
 import com.dsafun.app.data.repository.PreferencesRepository
 import com.dsafun.app.workers.WorkerScheduler
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,15 +27,20 @@ data class SettingsUiState(
     val currentStreak: Int = 0,
     val totalXp: Int = 0,
     val currentLevel: Int = 1,
-    val appVersion: String = "1.0.0"
+    val appVersion: String = "1.0.0",
+    val updateInfo: UpdateInfo? = null,
+    val autoUpdateEnabled: Boolean = false
 )
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
-    private val workerScheduler: WorkerScheduler
+    private val workerScheduler: WorkerScheduler,
+    private val updateChecker: RetrofitGitHubUpdateChecker
 ) : ViewModel() {
 
+    private val _updateInfo = MutableStateFlow<UpdateInfo?>(null)
+    
     val uiState: StateFlow<SettingsUiState> = combine(
         preferencesRepository.userName,
         preferencesRepository.dailyGoal,
@@ -49,7 +56,9 @@ class SettingsViewModel @Inject constructor(
         preferencesRepository.totalProblemsSolved,
         preferencesRepository.currentStreak,
         preferencesRepository.totalXp,
-        preferencesRepository.currentLevel
+        preferencesRepository.currentLevel,
+        _updateInfo,
+        preferencesRepository.autoUpdateEnabled
     ) { values ->
         SettingsUiState(
             userName = values[0] as String,
@@ -66,13 +75,26 @@ class SettingsViewModel @Inject constructor(
             totalProblemsSolved = values[11] as Int,
             currentStreak = values[12] as Int,
             totalXp = values[13] as Int,
-            currentLevel = values[14] as Int
+            currentLevel = values[14] as Int,
+            updateInfo = values[15] as UpdateInfo?,
+            autoUpdateEnabled = values[16] as Boolean
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = SettingsUiState()
     )
+    
+    init {
+        // Load cached update info on init
+        viewModelScope.launch {
+            updateChecker.getUpdateInfo().collect { updateInfo ->
+                if (updateInfo != null && !updateInfo.isDismissed) {
+                    _updateInfo.value = updateInfo
+                }
+            }
+        }
+    }
 
     fun updateUserName(name: String) {
         viewModelScope.launch {
@@ -158,6 +180,19 @@ class SettingsViewModel @Inject constructor(
             preferencesRepository.resetStreak()
             // Note: We don't reset total problems solved or XP
             // Only streak is reset as a "soft reset"
+        }
+    }
+    
+    fun checkForUpdates() {
+        viewModelScope.launch {
+            val updateInfo = updateChecker.checkForUpdates()
+            _updateInfo.value = updateInfo
+        }
+    }
+    
+    fun updateAutoUpdateEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.setAutoUpdateEnabled(enabled)
         }
     }
 }

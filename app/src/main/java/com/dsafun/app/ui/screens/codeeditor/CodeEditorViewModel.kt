@@ -8,12 +8,11 @@ import com.dsafun.app.data.local.entity.BadgeEntity
 import com.dsafun.app.data.local.entity.UserSolutionEntity
 import com.dsafun.app.data.local.datastore.LevelUpEvent
 import com.dsafun.app.data.repository.PreferencesRepository
+import com.dsafun.app.data.repository.ProgressRepository
 import com.dsafun.app.domain.executor.TestCaseResult
 import com.dsafun.app.domain.model.Language
 import com.dsafun.app.domain.model.Problem
 import com.dsafun.app.domain.usecase.GetProblemDetailUseCase
-import com.dsafun.app.domain.usecase.SubmitSolutionUseCase
-import com.dsafun.app.domain.usecase.SubmissionResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -60,8 +59,8 @@ class CodeEditorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getProblemDetailUseCase: GetProblemDetailUseCase,
     private val userSolutionDao: UserSolutionDao,
-    private val submitSolutionUseCase: SubmitSolutionUseCase,
-    private val preferencesRepository: PreferencesRepository
+    private val preferencesRepository: PreferencesRepository,
+    private val progressRepository: ProgressRepository
 ) : ViewModel() {
 
     private val problemId: Int = checkNotNull(savedStateHandle["problemId"])
@@ -340,49 +339,6 @@ class CodeEditorViewModel @Inject constructor(
         startTimer()
     }
     
-    fun runAndSubmit() {
-        viewModelScope.launch {
-            // Pause timer during submission
-            pauseTimer()
-            
-            submitSolutionUseCase(
-                problemId = problemId,
-                code = _uiState.value.currentCode,
-                language = _uiState.value.selectedLanguage,
-                timeTakenSeconds = _uiState.value.timerSeconds
-            ).collect { result ->
-                when (result) {
-                    is SubmissionResult.Running -> {
-                        _uiState.value = _uiState.value.copy(
-                            isRunning = true,
-                            showTestResults = true,
-                            submissionError = null
-                        )
-                    }
-                    is SubmissionResult.Success -> {
-                        _uiState.value = _uiState.value.copy(
-                            isRunning = false,
-                            testCaseResults = result.testResult.results,
-                            submissionStatus = result.status,
-                            xpGained = result.xpGained,
-                            levelUpEvent = result.levelUpEvent,
-                            showSubmissionResult = true,
-                            isDraftSaved = true,
-                            newBadges = result.newBadges
-                        )
-                    }
-                    is SubmissionResult.Error -> {
-                        _uiState.value = _uiState.value.copy(
-                            isRunning = false,
-                            submissionError = result.message
-                        )
-                        resumeTimer()
-                    }
-                }
-            }
-        }
-    }
-
     fun dismissTestResults() {
         _uiState.value = _uiState.value.copy(
             showTestResults = false
@@ -408,6 +364,39 @@ class CodeEditorViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(
             newBadges = emptyList()
         )
+    }
+
+    fun markAsSolved() {
+        viewModelScope.launch {
+            // Save as solved without running test cases
+            val solution = UserSolutionEntity(
+                problemId = problemId,
+                language = _uiState.value.selectedLanguage.name,
+                code = "", // No code saved, user solved it in OneCompiler
+                status = "SOLVED",
+                timeTakenSeconds = _uiState.value.timerSeconds,
+                attemptCount = 1,
+                lastEditedAt = System.currentTimeMillis()
+            )
+            userSolutionDao.upsertSolution(solution)
+            
+            // Award XP for solving
+            val xpGained = 50 // Fixed XP for marking as solved
+            val levelUpEvent = preferencesRepository.awardXp(xpGained)
+            preferencesRepository.incrementProblemsSolved()
+            
+            // Record solve in daily progress (this updates today's solved count)
+            val timeSpentMinutes = (_uiState.value.timerSeconds / 60).toInt()
+            progressRepository.recordSolve(xpGained, timeSpentMinutes)
+            
+            // Update UI state
+            _uiState.value = _uiState.value.copy(
+                submissionStatus = "SOLVED",
+                xpGained = xpGained,
+                levelUpEvent = levelUpEvent,
+                showSubmissionResult = true
+            )
+        }
     }
 
     override fun onCleared() {

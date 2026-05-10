@@ -79,22 +79,6 @@ fun StreakRing(
                     style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
                 )
             }
-            
-            // Flame icon if streak > 0
-            if (streak > 0) {
-                val flameSize = 16.dp.toPx()
-                val flameOffset = Offset(
-                    center.x - flameSize / 2,
-                    center.y - radius - strokeWidth - flameSize - 4.dp.toPx()
-                )
-                
-                // Simple flame shape (triangle)
-                drawCircle(
-                    color = flameColor,
-                    radius = flameSize / 2,
-                    center = Offset(flameOffset.x + flameSize / 2, flameOffset.y + flameSize / 2)
-                )
-            }
         }
         
         // Center text

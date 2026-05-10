@@ -3,6 +3,7 @@ package com.dsafun.app.navigation
 sealed class Screen(val route: String) {
     object Home : Screen("home")
     object Problems : Screen("problems")
+    object CommonProblems : Screen("common_problems")
     object Streak : Screen("streak")
     object Timer : Screen("timer")
     object Analytics : Screen("analytics")
@@ -13,6 +14,7 @@ sealed class Screen(val route: String) {
     object CodeEditor : Screen("code_editor/{problemId}") {
         fun createRoute(problemId: Int) = "code_editor/$problemId"
     }
+    object LeetCode : Screen("leetcode")
 }
 
 // Made with Bob

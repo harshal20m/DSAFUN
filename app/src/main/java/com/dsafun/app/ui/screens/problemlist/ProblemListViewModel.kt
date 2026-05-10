@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dsafun.app.domain.model.Problem
 import com.dsafun.app.domain.model.ProblemFilter
+import com.dsafun.app.domain.repository.ProblemRepository
 import com.dsafun.app.domain.usecase.GetProblemsUseCase
+import com.dsafun.app.ui.screens.LeetCodeProblemItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +18,10 @@ import javax.inject.Inject
 
 data class ProblemListUiState(
     val problems: List<Problem> = emptyList(),
+    val markedNativeProblems: List<Problem> = emptyList(),
+    val markedLeetCodeProblems: List<LeetCodeProblemItem> = emptyList(),
+    val solvedNativeProblemIds: Set<Int> = emptySet(),
+    val solvedLeetCodeProblemIds: Set<String> = emptySet(),
     val filter: ProblemFilter = ProblemFilter.EMPTY,
     val isSearchActive: Boolean = false,
     val isLoading: Boolean = true,
@@ -24,16 +30,19 @@ data class ProblemListUiState(
 
 @HiltViewModel
 class ProblemListViewModel @Inject constructor(
-    private val getProblemsUseCase: GetProblemsUseCase
+    private val getProblemsUseCase: GetProblemsUseCase,
+    private val problemRepository: ProblemRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProblemListUiState())
     val uiState: StateFlow<ProblemListUiState> = _uiState.asStateFlow()
 
     private var loadJob: Job? = null
+    private var markedJob: Job? = null
 
     init {
         loadProblems()
+        loadMarkedProblems()
     }
 
     fun onTopicSelected(topic: String?) {
@@ -89,6 +98,22 @@ class ProblemListViewModel @Inject constructor(
                         problems = problems,
                         isLoading = false,
                         error = null
+                    )
+                }
+        }
+    }
+
+    private fun loadMarkedProblems() {
+        markedJob?.cancel()
+        markedJob = viewModelScope.launch {
+            problemRepository.getMarkedProblems()
+                .catch { }
+                .collect { marked ->
+                    _uiState.value = _uiState.value.copy(
+                        markedNativeProblems = marked.nativeProblems,
+                        markedLeetCodeProblems = marked.leetCodeProblems,
+                        solvedNativeProblemIds = marked.solvedNativeProblemIds,
+                        solvedLeetCodeProblemIds = marked.solvedLeetCodeProblemIds
                     )
                 }
         }

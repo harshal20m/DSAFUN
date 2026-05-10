@@ -40,7 +40,8 @@ data class LeetCodeUiState(
     val solvedProblemIds: Set<String> = emptySet(),
     val completionBusyId: String? = null,
     val completionMessage: String? = null,
-    val levelUpEvent: LevelUpEvent? = null
+    val levelUpEvent: LevelUpEvent? = null,
+    val selectedTab: Int = 0 // 0 = All, 1 = Marked
 )
 
 @HiltViewModel
@@ -163,6 +164,10 @@ class LeetCodeViewModel @Inject constructor(
                     ?: if (wasSolved) "${problem.title} marked unsolved" else null
             )
         }
+    }
+
+    fun onTabSelected(tabIndex: Int) {
+        _uiState.value = _uiState.value.copy(selectedTab = tabIndex)
     }
 
     private fun loadLeetCodeProblems(): List<LeetCodeProblemItem> {

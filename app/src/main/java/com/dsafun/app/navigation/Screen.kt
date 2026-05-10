@@ -15,6 +15,9 @@ sealed class Screen(val route: String) {
         fun createRoute(problemId: Int) = "code_editor/$problemId"
     }
     object LeetCode : Screen("leetcode")
+    object ApnaCollege : Screen("apna_college")
+    object Fraz : Screen("fraz")
+    object LoveBabbar : Screen("love_babbar")
 }
 
 // Made with Bob

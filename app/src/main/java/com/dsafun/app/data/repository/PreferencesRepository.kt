@@ -75,6 +75,11 @@ class PreferencesRepository @Inject constructor(
     
     suspend fun setAutoUpdateEnabled(enabled: Boolean) = dataStore.setAutoUpdateEnabled(enabled)
     
+    // Milestone Celebrations
+    val lastMilestoneShown: Flow<Int> = dataStore.lastMilestoneShown
+    
+    suspend fun setLastMilestoneShown(milestone: Int) = dataStore.setLastMilestoneShown(milestone)
+    
     // Aggregated Stats
     val userStats: Flow<UserStats> = dataStore.userStats
 }

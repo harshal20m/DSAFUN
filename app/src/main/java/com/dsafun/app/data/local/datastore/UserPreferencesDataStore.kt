@@ -50,8 +50,28 @@ class UserPreferencesDataStore(private val context: Context) {
         val STREAK_WARNING_ENABLED = booleanPreferencesKey("streak_warning_enabled")
         val WEEKLY_SUMMARY_ENABLED = booleanPreferencesKey("weekly_summary_enabled")
         
+        // Collection-specific reminders
+        val LEETCODE_REMINDER_ENABLED = booleanPreferencesKey("leetcode_reminder_enabled")
+        val LEETCODE_REMINDER_HOUR = intPreferencesKey("leetcode_reminder_hour")
+        val LEETCODE_REMINDER_MINUTE = intPreferencesKey("leetcode_reminder_minute")
+        
+        val APNA_COLLEGE_REMINDER_ENABLED = booleanPreferencesKey("apna_college_reminder_enabled")
+        val APNA_COLLEGE_REMINDER_HOUR = intPreferencesKey("apna_college_reminder_hour")
+        val APNA_COLLEGE_REMINDER_MINUTE = intPreferencesKey("apna_college_reminder_minute")
+        
+        val FRAZ_REMINDER_ENABLED = booleanPreferencesKey("fraz_reminder_enabled")
+        val FRAZ_REMINDER_HOUR = intPreferencesKey("fraz_reminder_hour")
+        val FRAZ_REMINDER_MINUTE = intPreferencesKey("fraz_reminder_minute")
+        
+        val LOVE_BABBAR_REMINDER_ENABLED = booleanPreferencesKey("love_babbar_reminder_enabled")
+        val LOVE_BABBAR_REMINDER_HOUR = intPreferencesKey("love_babbar_reminder_hour")
+        val LOVE_BABBAR_REMINDER_MINUTE = intPreferencesKey("love_babbar_reminder_minute")
+        
         // App Updates
         val AUTO_UPDATE_ENABLED = booleanPreferencesKey("auto_update_enabled")
+        
+        // Milestone Celebrations
+        val LAST_MILESTONE_SHOWN = intPreferencesKey("last_milestone_shown")
         
         // Level thresholds for XP
         val LEVEL_THRESHOLDS = listOf(
@@ -343,9 +363,125 @@ class UserPreferencesDataStore(private val context: Context) {
         preferences[LAST_ACTIVE_DATE] ?: ""
     }
     
+    // Collection-specific reminders
+    // LeetCode
+    val leetcodeReminderEnabled: Flow<Boolean> = dataStore.data.map { preferences ->
+        preferences[LEETCODE_REMINDER_ENABLED] ?: false
+    }
+    
+    val leetcodeReminderHour: Flow<Int> = dataStore.data.map { preferences ->
+        preferences[LEETCODE_REMINDER_HOUR] ?: 9
+    }
+    
+    val leetcodeReminderMinute: Flow<Int> = dataStore.data.map { preferences ->
+        preferences[LEETCODE_REMINDER_MINUTE] ?: 0
+    }
+    
+    suspend fun setLeetCodeReminderEnabled(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[LEETCODE_REMINDER_ENABLED] = enabled
+        }
+    }
+    
+    suspend fun setLeetCodeReminderTime(hour: Int, minute: Int) {
+        dataStore.edit { preferences ->
+            preferences[LEETCODE_REMINDER_HOUR] = hour
+            preferences[LEETCODE_REMINDER_MINUTE] = minute
+        }
+    }
+    
+    // Apna College
+    val apnaCollegeReminderEnabled: Flow<Boolean> = dataStore.data.map { preferences ->
+        preferences[APNA_COLLEGE_REMINDER_ENABLED] ?: false
+    }
+    
+    val apnaCollegeReminderHour: Flow<Int> = dataStore.data.map { preferences ->
+        preferences[APNA_COLLEGE_REMINDER_HOUR] ?: 10
+    }
+    
+    val apnaCollegeReminderMinute: Flow<Int> = dataStore.data.map { preferences ->
+        preferences[APNA_COLLEGE_REMINDER_MINUTE] ?: 0
+    }
+    
+    suspend fun setApnaCollegeReminderEnabled(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[APNA_COLLEGE_REMINDER_ENABLED] = enabled
+        }
+    }
+    
+    suspend fun setApnaCollegeReminderTime(hour: Int, minute: Int) {
+        dataStore.edit { preferences ->
+            preferences[APNA_COLLEGE_REMINDER_HOUR] = hour
+            preferences[APNA_COLLEGE_REMINDER_MINUTE] = minute
+        }
+    }
+    
+    // Fraz
+    val frazReminderEnabled: Flow<Boolean> = dataStore.data.map { preferences ->
+        preferences[FRAZ_REMINDER_ENABLED] ?: false
+    }
+    
+    val frazReminderHour: Flow<Int> = dataStore.data.map { preferences ->
+        preferences[FRAZ_REMINDER_HOUR] ?: 14
+    }
+    
+    val frazReminderMinute: Flow<Int> = dataStore.data.map { preferences ->
+        preferences[FRAZ_REMINDER_MINUTE] ?: 0
+    }
+    
+    suspend fun setFrazReminderEnabled(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[FRAZ_REMINDER_ENABLED] = enabled
+        }
+    }
+    
+    suspend fun setFrazReminderTime(hour: Int, minute: Int) {
+        dataStore.edit { preferences ->
+            preferences[FRAZ_REMINDER_HOUR] = hour
+            preferences[FRAZ_REMINDER_MINUTE] = minute
+        }
+    }
+    
+    // Love Babbar
+    val loveBabbarReminderEnabled: Flow<Boolean> = dataStore.data.map { preferences ->
+        preferences[LOVE_BABBAR_REMINDER_ENABLED] ?: false
+    }
+    
+    val loveBabbarReminderHour: Flow<Int> = dataStore.data.map { preferences ->
+        preferences[LOVE_BABBAR_REMINDER_HOUR] ?: 16
+    }
+    
+    val loveBabbarReminderMinute: Flow<Int> = dataStore.data.map { preferences ->
+        preferences[LOVE_BABBAR_REMINDER_MINUTE] ?: 0
+    }
+    
+    suspend fun setLoveBabbarReminderEnabled(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[LOVE_BABBAR_REMINDER_ENABLED] = enabled
+        }
+    }
+    
+    suspend fun setLoveBabbarReminderTime(hour: Int, minute: Int) {
+        dataStore.edit { preferences ->
+            preferences[LOVE_BABBAR_REMINDER_HOUR] = hour
+            preferences[LOVE_BABBAR_REMINDER_MINUTE] = minute
+        }
+    }
+    
     suspend fun updateLastActiveDate(date: String) {
         dataStore.edit { preferences ->
             preferences[LAST_ACTIVE_DATE] = date
+        }
+    }
+    
+    // Milestone Celebrations
+    val lastMilestoneShown: Flow<Int> = dataStore.data.map { preferences ->
+        preferences[LAST_MILESTONE_SHOWN] ?: 0
+    }
+    
+    suspend fun setLastMilestoneShown(milestone: Int) {
+        dataStore.edit { preferences ->
+            preferences[LAST_MILESTONE_SHOWN] = milestone
         }
     }
     

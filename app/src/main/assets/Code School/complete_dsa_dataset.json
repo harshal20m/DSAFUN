@@ -1,0 +1,1017 @@
+[
+  {
+    "topic_id": 1,
+    "topic_name": "Arrays (5 days)",
+    "subtopics": [
+      {
+        "subtopic_id": 1,
+        "subtopic_name": "Array Basics (2 days)",
+        "items": [
+          {
+            "item_id": 1,
+            "topic_id": 1,
+            "subtopic_id": 1,
+            "section": "Theory",
+            "content": "C++ Arrays (With Examples)",
+            "platform": "",
+            "link": "",
+            "line_number": 6
+          },
+          {
+            "item_id": 2,
+            "topic_id": 1,
+            "subtopic_id": 1,
+            "section": "Theory",
+            "content": "Java Array (With Examples)",
+            "platform": "",
+            "link": "",
+            "line_number": 7
+          },
+          {
+            "item_id": 3,
+            "topic_id": 1,
+            "subtopic_id": 1,
+            "section": "Theory",
+            "content": "Python Array (With Examples)",
+            "platform": "",
+            "link": "",
+            "line_number": 8
+          }
+        ]
+      },
+      {
+        "subtopic_id": 2,
+        "subtopic_name": "Binary Search (2 days)",
+        "items": [
+          {
+            "item_id": 4,
+            "topic_id": 1,
+            "subtopic_id": 2,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/binary-search/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/binary-search/",
+            "line_number": 17
+          },
+          {
+            "item_id": 5,
+            "topic_id": 1,
+            "subtopic_id": 2,
+            "section": "Problems",
+            "content": "Search Insert Position - LeetCode",
+            "platform": "LeetCode",
+            "link": "",
+            "line_number": 19
+          },
+          {
+            "item_id": 6,
+            "topic_id": 1,
+            "subtopic_id": 2,
+            "section": "Problems",
+            "content": "Sqrt(x) - LeetCode",
+            "platform": "LeetCode",
+            "link": "",
+            "line_number": 20
+          },
+          {
+            "item_id": 7,
+            "topic_id": 1,
+            "subtopic_id": 2,
+            "section": "Problems",
+            "content": "Find Smallest Letter Greater Than Target - LeetCode",
+            "platform": "LeetCode",
+            "link": "",
+            "line_number": 21
+          },
+          {
+            "item_id": 8,
+            "topic_id": 1,
+            "subtopic_id": 2,
+            "section": "Problems",
+            "content": "Kth Smallest Element in a Sorted Matrix - LeetCode",
+            "platform": "LeetCode",
+            "link": "",
+            "line_number": 22
+          }
+        ]
+      },
+      {
+        "subtopic_id": 3,
+        "subtopic_name": "Two Pointers (1 day)",
+        "items": [
+          {
+            "item_id": 9,
+            "topic_id": 1,
+            "subtopic_id": 3,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/two-pointers-technique/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/two-pointers-technique/",
+            "line_number": 25
+          },
+          {
+            "item_id": 10,
+            "topic_id": 1,
+            "subtopic_id": 3,
+            "section": "Problems",
+            "content": "3 Sum | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 27
+          },
+          {
+            "item_id": 11,
+            "topic_id": 1,
+            "subtopic_id": 3,
+            "section": "Problems",
+            "content": "Merge Two Sorted Lists II | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 28
+          },
+          {
+            "item_id": 12,
+            "topic_id": 1,
+            "subtopic_id": 3,
+            "section": "Problems",
+            "content": "Remove Duplicates from Sorted Array | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 29
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "topic_id": 2,
+    "topic_name": "Strings (2 days)",
+    "subtopics": [
+      {
+        "subtopic_id": 4,
+        "subtopic_name": "String Basics (2 days)",
+        "items": [
+          {
+            "item_id": 13,
+            "topic_id": 2,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "Integer To Roman | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 32
+          },
+          {
+            "item_id": 14,
+            "topic_id": 2,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "Reverse the String | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 33
+          },
+          {
+            "item_id": 15,
+            "topic_id": 2,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "Implement StrStr | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 34
+          },
+          {
+            "item_id": 16,
+            "topic_id": 2,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "Vowel and Consonant Substrings! | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 35
+          },
+          {
+            "item_id": 17,
+            "topic_id": 2,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "Longest Common Prefix | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 36
+          },
+          {
+            "item_id": 18,
+            "topic_id": 2,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "Longest Palindromic Substring | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 37
+          },
+          {
+            "item_id": 19,
+            "topic_id": 3,
+            "subtopic_id": 4,
+            "section": "Theory",
+            "content": "https://www.programiz.com/dsa/linked-list",
+            "platform": "Programiz",
+            "link": "https://www.programiz.com/dsa/linked-list",
+            "line_number": 40
+          },
+          {
+            "item_id": 20,
+            "topic_id": 3,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "Reverse a linked list - GeeksforGeeks",
+            "platform": "GeeksforGeeks",
+            "link": "",
+            "line_number": 42
+          },
+          {
+            "item_id": 21,
+            "topic_id": 3,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "​​Rotate a Linked List - GeeksforGeeks",
+            "platform": "GeeksforGeeks",
+            "link": "",
+            "line_number": 43
+          },
+          {
+            "item_id": 22,
+            "topic_id": 3,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "Function to check if a singly linked list is palindrome - GeeksforGeeks",
+            "platform": "GeeksforGeeks",
+            "link": "",
+            "line_number": 44
+          },
+          {
+            "item_id": 23,
+            "topic_id": 3,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "Find the middle of a given linked list - GeeksforGeeks",
+            "platform": "GeeksforGeeks",
+            "link": "",
+            "line_number": 47
+          },
+          {
+            "item_id": 24,
+            "topic_id": 3,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "Delete N nodes after M nodes of a linked list - GeeksforGeeks",
+            "platform": "GeeksforGeeks",
+            "link": "",
+            "line_number": 48
+          },
+          {
+            "item_id": 25,
+            "topic_id": 3,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "Reverse alternate K nodes in a Singly Linked List - GeeksforGeeks",
+            "platform": "GeeksforGeeks",
+            "link": "",
+            "line_number": 50
+          },
+          {
+            "item_id": 26,
+            "topic_id": 4,
+            "subtopic_id": 4,
+            "section": "Theory",
+            "content": "https://www.programiz.com/dsa/stack",
+            "platform": "Programiz",
+            "link": "https://www.programiz.com/dsa/stack",
+            "line_number": 53
+          },
+          {
+            "item_id": 27,
+            "topic_id": 4,
+            "subtopic_id": 4,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/stack-in-cpp-stl/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/stack-in-cpp-stl/",
+            "line_number": 54
+          },
+          {
+            "item_id": 28,
+            "topic_id": 4,
+            "subtopic_id": 4,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/stack-class-in-java/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/stack-class-in-java/",
+            "line_number": 55
+          },
+          {
+            "item_id": 29,
+            "topic_id": 4,
+            "subtopic_id": 4,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/stack-in-python/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/stack-in-python/",
+            "line_number": 56
+          },
+          {
+            "item_id": 30,
+            "topic_id": 4,
+            "subtopic_id": 4,
+            "section": "Theory",
+            "content": "https://www.programiz.com/dsa/queue",
+            "platform": "Programiz",
+            "link": "https://www.programiz.com/dsa/queue",
+            "line_number": 57
+          },
+          {
+            "item_id": 31,
+            "topic_id": 4,
+            "subtopic_id": 4,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/queue-cpp-stl/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/queue-cpp-stl/",
+            "line_number": 58
+          },
+          {
+            "item_id": 32,
+            "topic_id": 4,
+            "subtopic_id": 4,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/queue-interface-java/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/queue-interface-java/",
+            "line_number": 59
+          },
+          {
+            "item_id": 33,
+            "topic_id": 4,
+            "subtopic_id": 4,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/queue-in-python/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/queue-in-python/",
+            "line_number": 60
+          },
+          {
+            "item_id": 34,
+            "topic_id": 4,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "Balanced Parantheses! | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 62
+          },
+          {
+            "item_id": 35,
+            "topic_id": 4,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "Redundant Braces | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 63
+          },
+          {
+            "item_id": 36,
+            "topic_id": 4,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "Nearest Smaller Element | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 64
+          },
+          {
+            "item_id": 37,
+            "topic_id": 4,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "Largest Rectangle in Histogram | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 65
+          },
+          {
+            "item_id": 38,
+            "topic_id": 4,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "Min Stack | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 66
+          },
+          {
+            "item_id": 39,
+            "topic_id": 4,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "First Unique Character in a String - LeetCode",
+            "platform": "LeetCode",
+            "link": "",
+            "line_number": 67
+          },
+          {
+            "item_id": 40,
+            "topic_id": 4,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "Implement Stack using Queues - LeetCode",
+            "platform": "LeetCode",
+            "link": "",
+            "line_number": 68
+          },
+          {
+            "item_id": 41,
+            "topic_id": 4,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "Time Needed to Buy Tickets - LeetCode",
+            "platform": "LeetCode",
+            "link": "",
+            "line_number": 69
+          },
+          {
+            "item_id": 42,
+            "topic_id": 4,
+            "subtopic_id": 4,
+            "section": "Problems",
+            "content": "Implement Queue using Stacks - LeetCode",
+            "platform": "LeetCode",
+            "link": "",
+            "line_number": 70
+          },
+          {
+            "item_id": 43,
+            "topic_id": 5,
+            "subtopic_id": 4,
+            "section": "Theory",
+            "content": "https://www.programiz.com/dsa/hash-table",
+            "platform": "Programiz",
+            "link": "https://www.programiz.com/dsa/hash-table",
+            "line_number": 73
+          },
+          {
+            "item_id": 44,
+            "topic_id": 5,
+            "subtopic_id": 4,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/unordered_map-in-cpp-stl/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/unordered_map-in-cpp-stl/",
+            "line_number": 74
+          },
+          {
+            "item_id": 45,
+            "topic_id": 5,
+            "subtopic_id": 4,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/java-util-hashmap-in-java-with-examples/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/java-util-hashmap-in-java-with-examples/",
+            "line_number": 75
+          },
+          {
+            "item_id": 46,
+            "topic_id": 5,
+            "subtopic_id": 4,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/hash-map-in-python/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/hash-map-in-python/",
+            "line_number": 76
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "topic_id": 3,
+    "topic_name": "Linked Lists (4 days)",
+    "subtopics": []
+  },
+  {
+    "topic_id": 4,
+    "topic_name": "Stacks and Queues (5 days)",
+    "subtopics": []
+  },
+  {
+    "topic_id": 5,
+    "topic_name": "Hashing (3 days)",
+    "subtopics": []
+  },
+  {
+    "topic_id": 6,
+    "topic_name": "Tree-based Data Structures (7 days)",
+    "subtopics": [
+      {
+        "subtopic_id": 5,
+        "subtopic_name": "Binary Tree & BST (5 days)",
+        "items": [
+          {
+            "item_id": 47,
+            "topic_id": 6,
+            "subtopic_id": 5,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/introduction-to-tree-data-structure/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/introduction-to-tree-data-structure/",
+            "line_number": 87
+          },
+          {
+            "item_id": 48,
+            "topic_id": 6,
+            "subtopic_id": 5,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/binary-tree-set-1-introduction/?ref=lbp",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/binary-tree-set-1-introduction/?ref=lbp",
+            "line_number": 88
+          },
+          {
+            "item_id": 49,
+            "topic_id": 6,
+            "subtopic_id": 5,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/binary-tree-set-2-properties/?ref=lbp",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/binary-tree-set-2-properties/?ref=lbp",
+            "line_number": 89
+          },
+          {
+            "item_id": 50,
+            "topic_id": 6,
+            "subtopic_id": 5,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/binary-tree-set-3-types-of-binary-tree/?ref=lbp",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/binary-tree-set-3-types-of-binary-tree/?ref=lbp",
+            "line_number": 90
+          },
+          {
+            "item_id": 51,
+            "topic_id": 6,
+            "subtopic_id": 5,
+            "section": "Problems",
+            "content": "Inorder Traversal | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 92
+          },
+          {
+            "item_id": 52,
+            "topic_id": 6,
+            "subtopic_id": 5,
+            "section": "Problems",
+            "content": "Preorder Traversal | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 93
+          },
+          {
+            "item_id": 53,
+            "topic_id": 6,
+            "subtopic_id": 5,
+            "section": "Problems",
+            "content": "Postorder Traversal | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 94
+          },
+          {
+            "item_id": 54,
+            "topic_id": 6,
+            "subtopic_id": 5,
+            "section": "Problems",
+            "content": "Max Depth of Binary Tree | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 95
+          },
+          {
+            "item_id": 55,
+            "topic_id": 6,
+            "subtopic_id": 5,
+            "section": "Problems",
+            "content": "Right view of Binary tree | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 96
+          },
+          {
+            "item_id": 56,
+            "topic_id": 6,
+            "subtopic_id": 5,
+            "section": "Problems",
+            "content": "Sorted Array To Balanced BST | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 97
+          },
+          {
+            "item_id": 57,
+            "topic_id": 6,
+            "subtopic_id": 5,
+            "section": "Problems",
+            "content": "Root to Leaf Paths With Sum | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 98
+          },
+          {
+            "item_id": 58,
+            "topic_id": 6,
+            "subtopic_id": 5,
+            "section": "Problems",
+            "content": "ZigZag Level Order Traversal BT | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 99
+          },
+          {
+            "item_id": 59,
+            "topic_id": 6,
+            "subtopic_id": 5,
+            "section": "Problems",
+            "content": "Symmetric Binary Tree | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 100
+          },
+          {
+            "item_id": 60,
+            "topic_id": 6,
+            "subtopic_id": 5,
+            "section": "Problems",
+            "content": "Balanced Binary Tree | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 101
+          },
+          {
+            "item_id": 61,
+            "topic_id": 6,
+            "subtopic_id": 5,
+            "section": "Problems",
+            "content": "Valid BST from Preorder | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 102
+          },
+          {
+            "item_id": 62,
+            "topic_id": 6,
+            "subtopic_id": 5,
+            "section": "Problems",
+            "content": "Kth Smallest Element In Tree | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 103
+          }
+        ]
+      },
+      {
+        "subtopic_id": 6,
+        "subtopic_name": "Heaps (1 day)",
+        "items": [
+          {
+            "item_id": 63,
+            "topic_id": 6,
+            "subtopic_id": 6,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/binary-heap/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/binary-heap/",
+            "line_number": 106
+          },
+          {
+            "item_id": 64,
+            "topic_id": 6,
+            "subtopic_id": 6,
+            "section": "Problems",
+            "content": "K Largest Elements | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 108
+          },
+          {
+            "item_id": 65,
+            "topic_id": 6,
+            "subtopic_id": 6,
+            "section": "Problems",
+            "content": "Merge K Sorted Lists | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 109
+          }
+        ]
+      },
+      {
+        "subtopic_id": 7,
+        "subtopic_name": "Trie (1 day)",
+        "items": [
+          {
+            "item_id": 66,
+            "topic_id": 6,
+            "subtopic_id": 7,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/advantages-trie-data-structure/?ref=lbp",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/advantages-trie-data-structure/?ref=lbp",
+            "line_number": 112
+          },
+          {
+            "item_id": 67,
+            "topic_id": 6,
+            "subtopic_id": 7,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/trie-insert-and-search/?ref=lbp",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/trie-insert-and-search/?ref=lbp",
+            "line_number": 113
+          },
+          {
+            "item_id": 68,
+            "topic_id": 6,
+            "subtopic_id": 7,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/trie-delete/?ref=lbp",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/trie-delete/?ref=lbp",
+            "line_number": 114
+          },
+          {
+            "item_id": 69,
+            "topic_id": 6,
+            "subtopic_id": 7,
+            "section": "Problems",
+            "content": "Hotel Reviews | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 116
+          },
+          {
+            "item_id": 70,
+            "topic_id": 6,
+            "subtopic_id": 7,
+            "section": "Problems",
+            "content": "Shortest Unique Prefix | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 117
+          },
+          {
+            "item_id": 71,
+            "topic_id": 7,
+            "subtopic_id": 7,
+            "section": "Theory",
+            "content": "https://www.youtube.com/watch?v=OQ5jsbhAv_M&list=PLcDimPvbmfT8qAxD6JH_kmXiQwTNcoK78",
+            "platform": "YouTube",
+            "link": "https://www.youtube.com/watch?v=OQ5jsbhAv_M&list=PLcDimPvbmfT8qAxD6JH_kmXiQwTNcoK78",
+            "line_number": 120
+          },
+          {
+            "item_id": 72,
+            "topic_id": 7,
+            "subtopic_id": 7,
+            "section": "Theory",
+            "content": "https://www.youtube.com/watch?v=ENyox7kNKeY&list=PLcDimPvbmfT8qAxD6JH_kmXiQwTNcoK78&index=2",
+            "platform": "YouTube",
+            "link": "https://www.youtube.com/watch?v=ENyox7kNKeY&list=PLcDimPvbmfT8qAxD6JH_kmXiQwTNcoK78&index=2",
+            "line_number": 121
+          },
+          {
+            "item_id": 73,
+            "topic_id": 7,
+            "subtopic_id": 7,
+            "section": "Theory",
+            "content": "https://www.youtube.com/watch?v=ocZMDMZwhCY&list=PLcDimPvbmfT8qAxD6JH_kmXiQwTNcoK78&index=3",
+            "platform": "YouTube",
+            "link": "https://www.youtube.com/watch?v=ocZMDMZwhCY&list=PLcDimPvbmfT8qAxD6JH_kmXiQwTNcoK78&index=3",
+            "line_number": 122
+          },
+          {
+            "item_id": 74,
+            "topic_id": 7,
+            "subtopic_id": 7,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/program-for-nth-fibonacci-number/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/program-for-nth-fibonacci-number/",
+            "line_number": 123
+          },
+          {
+            "item_id": 75,
+            "topic_id": 7,
+            "subtopic_id": 7,
+            "section": "Problems",
+            "content": "https://www.geeksforgeeks.org/longest-increasing-subsequence-dp-3/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/longest-increasing-subsequence-dp-3/",
+            "line_number": 125
+          },
+          {
+            "item_id": 76,
+            "topic_id": 7,
+            "subtopic_id": 7,
+            "section": "Problems",
+            "content": "https://www.geeksforgeeks.org/longest-common-subsequence-dp-4/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/longest-common-subsequence-dp-4/",
+            "line_number": 126
+          },
+          {
+            "item_id": 77,
+            "topic_id": 7,
+            "subtopic_id": 7,
+            "section": "Problems",
+            "content": "https://www.geeksforgeeks.org/longest-common-substring-dp-29/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/longest-common-substring-dp-29/",
+            "line_number": 127
+          },
+          {
+            "item_id": 78,
+            "topic_id": 7,
+            "subtopic_id": 7,
+            "section": "Problems",
+            "content": "Edit Distance | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 136
+          },
+          {
+            "item_id": 79,
+            "topic_id": 7,
+            "subtopic_id": 7,
+            "section": "Problems",
+            "content": "Ways to Decode | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 137
+          },
+          {
+            "item_id": 80,
+            "topic_id": 7,
+            "subtopic_id": 7,
+            "section": "Problems",
+            "content": "Longest valid Parentheses | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 138
+          },
+          {
+            "item_id": 81,
+            "topic_id": 7,
+            "subtopic_id": 7,
+            "section": "Problems",
+            "content": "Dungeon Princess | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 139
+          },
+          {
+            "item_id": 82,
+            "topic_id": 7,
+            "subtopic_id": 7,
+            "section": "Problems",
+            "content": "Max Product Subarray | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 140
+          },
+          {
+            "item_id": 83,
+            "topic_id": 7,
+            "subtopic_id": 7,
+            "section": "Problems",
+            "content": "Max Sum Without Adjacent Elements | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 141
+          },
+          {
+            "item_id": 84,
+            "topic_id": 7,
+            "subtopic_id": 7,
+            "section": "Problems",
+            "content": "Best Time to Buy and Sell Stocks I | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 142
+          },
+          {
+            "item_id": 85,
+            "topic_id": 7,
+            "subtopic_id": 7,
+            "section": "Problems",
+            "content": "Best Time to Buy and Sell Stocks II | Interviewbit",
+            "platform": "InterviewBit",
+            "link": "",
+            "line_number": 143
+          },
+          {
+            "item_id": 86,
+            "topic_id": 8,
+            "subtopic_id": 7,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/graph-and-its-representations/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/graph-and-its-representations/",
+            "line_number": 146
+          },
+          {
+            "item_id": 87,
+            "topic_id": 8,
+            "subtopic_id": 7,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/",
+            "line_number": 147
+          },
+          {
+            "item_id": 88,
+            "topic_id": 8,
+            "subtopic_id": 7,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/",
+            "line_number": 148
+          },
+          {
+            "item_id": 89,
+            "topic_id": 8,
+            "subtopic_id": 7,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/",
+            "line_number": 149
+          },
+          {
+            "item_id": 90,
+            "topic_id": 8,
+            "subtopic_id": 7,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/prims-minimum-spanning-tree-mst-greedy-algo-5/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/prims-minimum-spanning-tree-mst-greedy-algo-5/",
+            "line_number": 150
+          },
+          {
+            "item_id": 91,
+            "topic_id": 8,
+            "subtopic_id": 7,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/",
+            "line_number": 151
+          },
+          {
+            "item_id": 92,
+            "topic_id": 8,
+            "subtopic_id": 7,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/floyd-warshall-algorithm-dp-16/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/floyd-warshall-algorithm-dp-16/",
+            "line_number": 152
+          },
+          {
+            "item_id": 93,
+            "topic_id": 8,
+            "subtopic_id": 7,
+            "section": "Theory",
+            "content": "https://www.geeksforgeeks.org/union-find-algorithm-union-rank-find-optimized-path-compression/",
+            "platform": "GeeksforGeeks",
+            "link": "https://www.geeksforgeeks.org/union-find-algorithm-union-rank-find-optimized-path-compression/",
+            "line_number": 153
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "topic_id": 7,
+    "topic_name": "Dynamic Programming (8 Days)",
+    "subtopics": []
+  },
+  {
+    "topic_id": 8,
+    "topic_name": "Graphs (8 Days)",
+    "subtopics": []
+  }
+]

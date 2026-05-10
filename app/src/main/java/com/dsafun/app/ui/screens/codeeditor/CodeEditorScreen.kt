@@ -352,6 +352,7 @@ fun CodeEditorScreen(
             onDismiss = viewModel::dismissBadgeCelebration
         )
     }
+    
 }
 
 

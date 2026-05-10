@@ -34,7 +34,7 @@ data class SettingsUiState(
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val preferencesRepository: PreferencesRepository,
+    val preferencesRepository: PreferencesRepository,
     private val workerScheduler: WorkerScheduler,
     private val updateChecker: RetrofitGitHubUpdateChecker
 ) : ViewModel() {

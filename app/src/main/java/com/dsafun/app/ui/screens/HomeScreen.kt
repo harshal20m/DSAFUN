@@ -1,28 +1,34 @@
 package com.dsafun.app.ui.screens
 
+import androidx.compose.animation.*
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dsafun.app.domain.usecase.HomeStats
 import com.dsafun.app.domain.usecase.TopicProgress
-import com.dsafun.app.ui.components.ProblemCard
 import com.dsafun.app.ui.components.StreakRing
 import com.dsafun.app.ui.components.XpBar
 import com.dsafun.app.ui.screens.home.HomeViewModel
@@ -33,12 +39,22 @@ import java.util.*
 fun HomeScreen(
     onNavigateToProblem: (Int) -> Unit = {},
     onNavigateToSettings: () -> Unit = {},
+    onNavigateToProblems: () -> Unit = {},
+    onNavigateToTimer: () -> Unit = {},
+    onNavigateToAnalytics: () -> Unit = {},
+    onNavigateToStreak: () -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val homeStats by viewModel.homeStats.collectAsState()
     
+    // Animation state
+    var isVisible by remember { mutableStateOf(false) }
+    
+    LaunchedEffect(Unit) {
+        isVisible = true
+    }
+    
     if (homeStats == null) {
-        // Loading state
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -54,93 +70,137 @@ fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
-        contentPadding = PaddingValues(Dimens.SpacingMedium),
+        contentPadding = PaddingValues(bottom = 80.dp),
         verticalArrangement = Arrangement.spacedBy(Dimens.SpacingMedium)
     ) {
-        // 1. Greeting Header
+        // Hero Section with Greeting & Stats
         item {
-            GreetingHeader(
-                userName = stats.userName,
-                onSettingsClick = onNavigateToSettings
-            )
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = fadeIn() + slideInVertically()
+            ) {
+                HeroSection(
+                    userName = stats.userName,
+                    level = stats.level,
+                    totalXp = stats.totalXp,
+                    xpToNextLevel = stats.xpToNextLevel,
+                    onSettingsClick = onNavigateToSettings
+                )
+            }
         }
         
-        // 2. Streak + XP Row
+        // Quick Stats Cards Row
         item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(Dimens.SpacingMedium)
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = fadeIn(animationSpec = tween(delayMillis = 100)) + 
+                        slideInVertically(animationSpec = tween(delayMillis = 100))
             ) {
-                // Streak Counter
-                StreakCounter(
+                QuickStatsRow(
                     currentStreak = stats.currentStreak,
                     bestStreak = stats.bestStreak,
-                    modifier = Modifier.weight(1f)
+                    todaySolved = stats.todaySolved,
+                    dailyGoal = stats.dailyGoal,
+                    freezeTokens = stats.freezeTokens,
+                    onStreakClick = onNavigateToStreak
                 )
             }
         }
         
-        // XP Bar
+        // Daily Challenge Card
         item {
-            XpBar(
-                currentXp = stats.totalXp,
-                xpToNextLevel = stats.xpToNextLevel,
-                level = stats.level
-            )
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = fadeIn(animationSpec = tween(delayMillis = 200)) + 
+                        slideInVertically(animationSpec = tween(delayMillis = 200))
+            ) {
+                stats.dailyChallenge?.let { challenge ->
+                    DailyChallengeCard(
+                        problem = challenge,
+                        isCompleted = stats.isDailyChallengeCompleted,
+                        onClick = { onNavigateToProblem(challenge.id) }
+                    )
+                }
+            }
         }
         
-        // 3. Daily Challenge Card
+        // Quick Actions
         item {
-            stats.dailyChallenge?.let { challenge ->
-                DailyChallengeCard(
-                    problem = challenge,
-                    isCompleted = stats.isDailyChallengeCompleted,
-                    onClick = { onNavigateToProblem(challenge.id) }
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = fadeIn(animationSpec = tween(delayMillis = 300)) + 
+                        slideInVertically(animationSpec = tween(delayMillis = 300))
+            ) {
+                QuickActionsSection(
+                    onNavigateToProblems = onNavigateToProblems,
+                    onNavigateToTimer = onNavigateToTimer,
+                    onNavigateToAnalytics = onNavigateToAnalytics
                 )
             }
         }
         
-        // 4. Today's Progress
+        // Topic Progress
         item {
-            TodaysProgressCard(
-                solved = stats.todaySolved,
-                goal = stats.dailyGoal,
-                streak = stats.currentStreak
-            )
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = fadeIn(animationSpec = tween(delayMillis = 400)) + 
+                        slideInVertically(animationSpec = tween(delayMillis = 400))
+            ) {
+                TopicProgressSection(topicProgresses = stats.topicProgresses)
+            }
         }
         
-        // 5. Topic Progress
-        item {
-            TopicProgressSection(topicProgresses = stats.topicProgresses)
-        }
-        
-        // 6. Recent Activity
+        // Recent Activity
         if (stats.recentSolutions.isNotEmpty()) {
             item {
-                Text(
-                    text = "Recent Activity",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-            
-            items(stats.recentSolutions.take(5)) { solution ->
-                RecentActivityItem(solution = solution)
+                AnimatedVisibility(
+                    visible = isVisible,
+                    enter = fadeIn(animationSpec = tween(delayMillis = 500)) + 
+                            slideInVertically(animationSpec = tween(delayMillis = 500))
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = Dimens.SpacingMedium),
+                        verticalArrangement = Arrangement.spacedBy(Dimens.SpacingSmall)
+                    ) {
+                        Text(
+                            text = "Recent Activity",
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = FontWeight.Bold
+                            ),
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                        
+                        stats.recentSolutions.take(3).forEach { solution ->
+                            RecentActivityItem(solution = solution)
+                        }
+                    }
+                }
             }
         }
         
-        // 7. Motivational Quote
+        // Motivational Quote
         item {
-            MotivationalQuote()
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = fadeIn(animationSpec = tween(delayMillis = 600)) + 
+                        slideInVertically(animationSpec = tween(delayMillis = 600))
+            ) {
+                MotivationalQuote(
+                    modifier = Modifier.padding(horizontal = Dimens.SpacingMedium)
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun GreetingHeader(
+private fun HeroSection(
     userName: String,
+    level: Int,
+    totalXp: Int,
+    xpToNextLevel: Int,
     onSettingsClick: () -> Unit
 ) {
     val greeting = when (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) {
@@ -149,70 +209,196 @@ private fun GreetingHeader(
         else -> "Good evening"
     }
     
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column {
-            Text(
-                text = "$greeting,",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val secondaryColor = MaterialTheme.colorScheme.secondary
+    
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        primaryColor.copy(alpha = 0.1f),
+                        MaterialTheme.colorScheme.background
+                    )
+                )
             )
-            Text(
-                text = userName,
-                style = MaterialTheme.typography.headlineMedium.copy(
-                    fontWeight = FontWeight.Bold
-                ),
-                color = MaterialTheme.colorScheme.onBackground
+            .padding(Dimens.SpacingMedium)
+    ) {
+        // Header Row
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "$greeting,",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                )
+                Text(
+                    text = userName,
+                    style = MaterialTheme.typography.headlineLarge.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = MaterialTheme.colorScheme.onBackground,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            
+            IconButton(
+                onClick = onSettingsClick,
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "Settings",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(Dimens.SpacingMedium))
+        
+        // XP Bar
+        XpBar(
+            currentXp = totalXp,
+            xpToNextLevel = xpToNextLevel,
+            level = level
+        )
+    }
+}
+
+@Composable
+private fun QuickStatsRow(
+    currentStreak: Int,
+    bestStreak: Int,
+    todaySolved: Int,
+    dailyGoal: Int,
+    freezeTokens: Int,
+    onStreakClick: () -> Unit
+) {
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(horizontal = Dimens.SpacingMedium),
+        horizontalArrangement = Arrangement.spacedBy(Dimens.SpacingSmall)
+    ) {
+        // Streak Card
+        item {
+            StatCard(
+                icon = "🔥",
+                title = "Streak",
+                value = "$currentStreak",
+                subtitle = "Best: $bestStreak",
+                color = Color(0xFFFF6B35),
+                onClick = onStreakClick
             )
         }
         
-        IconButton(onClick = onSettingsClick) {
-            Icon(
-                imageVector = Icons.Default.Settings,
-                contentDescription = "Settings",
-                tint = MaterialTheme.colorScheme.onBackground
+        // Today's Progress Card
+        item {
+            StatCard(
+                icon = "✓",
+                title = "Today",
+                value = "$todaySolved/$dailyGoal",
+                subtitle = if (todaySolved >= dailyGoal) "Goal reached!" else "${dailyGoal - todaySolved} to go",
+                color = if (todaySolved >= dailyGoal) Color(0xFF10B981) else MaterialTheme.colorScheme.primary,
+                onClick = {}
+            )
+        }
+        
+        // Freeze Tokens Card
+        item {
+            StatCard(
+                icon = "❄️",
+                title = "Freeze",
+                value = "$freezeTokens",
+                subtitle = "Tokens",
+                color = Color(0xFF3B82F6),
+                onClick = {}
             )
         }
     }
 }
 
 @Composable
-private fun StreakCounter(
-    currentStreak: Int,
-    bestStreak: Int,
-    modifier: Modifier = Modifier
+private fun StatCard(
+    icon: String,
+    title: String,
+    value: String,
+    subtitle: String,
+    color: Color,
+    onClick: () -> Unit
 ) {
+    var isPressed by remember { mutableStateOf(false) }
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.95f else 1f,
+        animationSpec = spring(stiffness = Spring.StiffnessLow)
+    )
+    
     Card(
-        modifier = modifier,
+        modifier = Modifier
+            .width(140.dp)
+            .scale(scale)
+            .clickable {
+                isPressed = true
+                onClick()
+            },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(Dimens.SpacingMedium),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.Start
         ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = icon,
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(4.dp))
+            
             Text(
-                text = "🔥",
-                style = MaterialTheme.typography.headlineLarge
-            )
-            Text(
-                text = "$currentStreak Day${if (currentStreak != 1) "s" else ""}",
-                style = MaterialTheme.typography.titleMedium.copy(
+                text = value,
+                style = MaterialTheme.typography.headlineMedium.copy(
                     fontWeight = FontWeight.Bold
                 ),
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = color
             )
+            
             Text(
-                text = "Best: $bestStreak",
+                text = subtitle,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
+        }
+    }
+    
+    LaunchedEffect(isPressed) {
+        if (isPressed) {
+            kotlinx.coroutines.delay(100)
+            isPressed = false
         }
     }
 }
@@ -223,17 +409,25 @@ private fun DailyChallengeCard(
     isCompleted: Boolean,
     onClick: () -> Unit
 ) {
+    val containerColor = if (isCompleted) {
+        MaterialTheme.colorScheme.secondaryContainer
+    } else {
+        MaterialTheme.colorScheme.primaryContainer
+    }
+    
+    val contentColor = if (isCompleted) {
+        MaterialTheme.colorScheme.onSecondaryContainer
+    } else {
+        MaterialTheme.colorScheme.onPrimaryContainer
+    }
+    
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = Dimens.SpacingMedium)
             .clickable(onClick = onClick),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isCompleted) {
-                MaterialTheme.colorScheme.secondaryContainer
-            } else {
-                MaterialTheme.colorScheme.primaryContainer
-            }
-        )
+        colors = CardDefaults.cardColors(containerColor = containerColor),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
             modifier = Modifier
@@ -251,19 +445,24 @@ private fun DailyChallengeCard(
                 ) {
                     Text(
                         text = if (isCompleted) "✓" else "⭐",
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.headlineSmall
                     )
-                    Text(
-                        text = if (isCompleted) "Daily Challenge - Completed!" else "Daily Challenge",
-                        style = MaterialTheme.typography.labelLarge.copy(
-                            fontWeight = FontWeight.Bold
-                        ),
-                        color = if (isCompleted) {
-                            MaterialTheme.colorScheme.onSecondaryContainer
-                        } else {
-                            MaterialTheme.colorScheme.onPrimaryContainer
+                    Column {
+                        Text(
+                            text = "Daily Challenge",
+                            style = MaterialTheme.typography.labelLarge.copy(
+                                fontWeight = FontWeight.Bold
+                            ),
+                            color = contentColor
+                        )
+                        if (isCompleted) {
+                            Text(
+                                text = "Completed!",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = contentColor.copy(alpha = 0.7f)
+                            )
                         }
-                    )
+                    }
                 }
                 
                 if (!isCompleted) {
@@ -273,130 +472,148 @@ private fun DailyChallengeCard(
                             "Medium" -> Color(0xFFF59E0B)
                             else -> Color(0xFFEF4444)
                         },
-                        shape = RoundedCornerShape(4.dp)
+                        shape = RoundedCornerShape(12.dp)
                     ) {
                         Text(
                             text = problem.difficulty,
-                            style = MaterialTheme.typography.labelSmall,
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontWeight = FontWeight.Bold
+                            ),
                             color = Color.White,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                         )
                     }
                 }
             }
             
-            Spacer(modifier = Modifier.height(Dimens.SpacingSmall))
+            Spacer(modifier = Modifier.height(12.dp))
             
             Text(
                 text = problem.title,
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold
                 ),
-                color = if (isCompleted) {
-                    MaterialTheme.colorScheme.onSecondaryContainer
-                } else {
-                    MaterialTheme.colorScheme.onPrimaryContainer
-                }
+                color = contentColor,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
             )
             
-            Text(
-                text = problem.topic,
-                style = MaterialTheme.typography.bodySmall,
-                color = if (isCompleted) {
-                    MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
-                } else {
-                    MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+            Spacer(modifier = Modifier.height(4.dp))
+            
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Surface(
+                    color = contentColor.copy(alpha = 0.2f),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        text = problem.topic,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = contentColor,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    )
                 }
-            )
+                
+                if (!isCompleted) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowForward,
+                        contentDescription = null,
+                        tint = contentColor,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+            }
         }
     }
 }
 
 @Composable
-private fun TodaysProgressCard(
-    solved: Int,
-    goal: Int,
-    streak: Int
+private fun QuickActionsSection(
+    onNavigateToProblems: () -> Unit,
+    onNavigateToTimer: () -> Unit,
+    onNavigateToAnalytics: () -> Unit
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimens.SpacingMedium),
+        verticalArrangement = Arrangement.spacedBy(Dimens.SpacingSmall)
     ) {
+        Text(
+            text = "Quick Actions",
+            style = MaterialTheme.typography.titleLarge.copy(
+                fontWeight = FontWeight.Bold
+            ),
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(Dimens.SpacingMedium),
-            horizontalArrangement = Arrangement.spacedBy(Dimens.SpacingMedium),
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(Dimens.SpacingSmall)
         ) {
-            // Streak Ring
-            StreakRing(
-                solved = solved,
-                goal = goal,
-                streak = streak,
-                modifier = Modifier.size(120.dp)
+            QuickActionButton(
+                icon = Icons.Default.List,
+                label = "Browse Problems",
+                onClick = onNavigateToProblems,
+                modifier = Modifier.weight(1f)
             )
             
-            // Progress Info
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = "Today's Progress",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    color = MaterialTheme.colorScheme.onSurface
+            QuickActionButton(
+                icon = Icons.Default.Timer,
+                label = "Focus Timer",
+                onClick = onNavigateToTimer,
+                modifier = Modifier.weight(1f)
+            )
+        }
+        
+        QuickActionButton(
+            icon = Icons.Default.Analytics,
+            label = "View Analytics",
+            onClick = onNavigateToAnalytics,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+private fun QuickActionButton(
+    icon: ImageVector,
+    label: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = modifier.height(56.dp),
+        colors = ButtonDefaults.outlinedButtonColors(
+            containerColor = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.primary
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
+        ),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelLarge.copy(
+                    fontWeight = FontWeight.Medium
                 )
-                
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "$solved",
-                        style = MaterialTheme.typography.headlineMedium.copy(
-                            fontWeight = FontWeight.Bold
-                        ),
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Text(
-                        text = "/ $goal problems",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                    )
-                }
-                
-                if (solved >= goal) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "✓",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = Color(0xFF10B981)
-                        )
-                        Text(
-                            text = "Goal completed!",
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                fontWeight = FontWeight.Medium
-                            ),
-                            color = Color(0xFF10B981)
-                        )
-                    }
-                } else {
-                    val remaining = goal - solved
-                    Text(
-                        text = "$remaining more to reach your goal",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                    )
-                }
-            }
+            )
         }
     }
 }
@@ -404,16 +621,30 @@ private fun TodaysProgressCard(
 @Composable
 private fun TopicProgressSection(topicProgresses: List<TopicProgress>) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimens.SpacingMedium),
         verticalArrangement = Arrangement.spacedBy(Dimens.SpacingSmall)
     ) {
-        Text(
-            text = "Topic Progress",
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Bold
-            ),
-            color = MaterialTheme.colorScheme.onBackground
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Topic Progress",
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold
+                ),
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            
+            Text(
+                text = "Top 5",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+            )
+        }
         
         topicProgresses.take(5).forEach { topicProgress ->
             TopicProgressBar(topicProgress = topicProgress)
@@ -423,32 +654,46 @@ private fun TopicProgressSection(topicProgresses: List<TopicProgress>) {
 
 @Composable
 private fun TopicProgressBar(topicProgress: TopicProgress) {
+    val animatedProgress by animateFloatAsState(
+        targetValue = topicProgress.progress,
+        animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing)
+    )
+    
     Column(
         modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = topicProgress.topic,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.Medium
+                ),
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.weight(1f),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
+            
             Text(
                 text = "${topicProgress.solved}/${topicProgress.total}",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                style = MaterialTheme.typography.labelLarge.copy(
+                    fontWeight = FontWeight.Bold
+                ),
+                color = MaterialTheme.colorScheme.primary
             )
         }
         
         LinearProgressIndicator(
-            progress = topicProgress.progress,
+            progress = animatedProgress,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(8.dp)
-                .clip(RoundedCornerShape(4.dp)),
+                .height(10.dp)
+                .clip(RoundedCornerShape(5.dp)),
             color = MaterialTheme.colorScheme.primary,
             trackColor = MaterialTheme.colorScheme.surfaceVariant
         )
@@ -463,7 +708,8 @@ private fun RecentActivityItem(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+        ),
+        shape = RoundedCornerShape(12.dp)
     ) {
         Row(
             modifier = Modifier
@@ -472,19 +718,48 @@ private fun RecentActivityItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "Problem #${solution.problemId}",
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = solution.language,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-                )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1f)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(
+                            when (solution.status) {
+                                "SOLVED" -> Color(0xFF10B981).copy(alpha = 0.2f)
+                                "ATTEMPTED" -> Color(0xFFF59E0B).copy(alpha = 0.2f)
+                                else -> Color(0xFFEF4444).copy(alpha = 0.2f)
+                            }
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = when (solution.status) {
+                            "SOLVED" -> "✓"
+                            "ATTEMPTED" -> "⚡"
+                            else -> "✗"
+                        },
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Problem #${solution.problemId}",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = solution.language,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                    )
+                }
             }
             
             Surface(
@@ -493,13 +768,15 @@ private fun RecentActivityItem(
                     "ATTEMPTED" -> Color(0xFFF59E0B)
                     else -> Color(0xFFEF4444)
                 },
-                shape = RoundedCornerShape(4.dp)
+                shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
                     text = solution.status,
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
                     color = Color.White,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
                 )
             }
         }
@@ -507,37 +784,58 @@ private fun RecentActivityItem(
 }
 
 @Composable
-private fun MotivationalQuote() {
+private fun MotivationalQuote(modifier: Modifier = Modifier) {
     val quotes = listOf(
-        "The only way to do great work is to love what you do.",
-        "Code is like humor. When you have to explain it, it's bad.",
-        "First, solve the problem. Then, write the code.",
-        "Experience is the name everyone gives to their mistakes.",
-        "In order to be irreplaceable, one must always be different.",
-        "Simplicity is the soul of efficiency.",
-        "Make it work, make it right, make it fast.",
-        "The best error message is the one that never shows up.",
-        "Debugging is twice as hard as writing the code in the first place.",
-        "Any fool can write code that a computer can understand. Good programmers write code that humans can understand."
+        "The only way to do great work is to love what you do." to "Steve Jobs",
+        "Code is like humor. When you have to explain it, it's bad." to "Cory House",
+        "First, solve the problem. Then, write the code." to "John Johnson",
+        "Make it work, make it right, make it fast." to "Kent Beck",
+        "Simplicity is the soul of efficiency." to "Austin Freeman",
+        "Any fool can write code that a computer can understand. Good programmers write code that humans can understand." to "Martin Fowler",
+        "Experience is the name everyone gives to their mistakes." to "Oscar Wilde",
+        "The best error message is the one that never shows up." to "Thomas Fuchs"
     )
     
     val dayOfYear = Calendar.getInstance().get(Calendar.DAY_OF_YEAR)
-    val quote = quotes[dayOfYear % quotes.size]
+    val (quote, author) = quotes[dayOfYear % quotes.size]
     
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
-        )
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer
+        ),
+        shape = RoundedCornerShape(16.dp)
     ) {
-        Text(
-            text = "\"$quote\"",
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontWeight = FontWeight.Medium
-            ),
-            color = MaterialTheme.colorScheme.onSecondaryContainer,
-            modifier = Modifier.padding(Dimens.SpacingMedium)
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Dimens.SpacingMedium),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.FormatQuote,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.5f),
+                modifier = Modifier.size(24.dp)
+            )
+            
+            Text(
+                text = quote,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Medium,
+                    lineHeight = 24.sp
+                ),
+                color = MaterialTheme.colorScheme.onTertiaryContainer
+            )
+            
+            Text(
+                text = "— $author",
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontWeight = FontWeight.SemiBold
+                ),
+                color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.7f)
+            )
+        }
     }
 }
 

@@ -1,5 +1,7 @@
 package com.dsafun.app
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,16 +12,24 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.dsafun.app.data.repository.PreferencesRepository
 import com.dsafun.app.domain.model.TimerState
 import com.dsafun.app.navigation.Screen
 import com.dsafun.app.ui.components.BottomNavigationBar
@@ -29,7 +39,10 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.dsafun.app.data.local.datastore.UserPreferencesDataStore
 import com.dsafun.app.ui.screens.AnalyticsScreen
+import com.dsafun.app.ui.screens.ApnaCollegeScreen
+import com.dsafun.app.ui.screens.FrazScreen
 import com.dsafun.app.ui.screens.HomeScreen
+import com.dsafun.app.ui.screens.LoveBabbarScreen
 import com.dsafun.app.ui.screens.LeetCodeScreen
 import com.dsafun.app.ui.screens.ProblemsScreen
 import com.dsafun.app.ui.screens.SettingsScreen
@@ -42,6 +55,7 @@ import com.dsafun.app.ui.screens.timer.FocusTimerViewModel
 import com.dsafun.app.ui.theme.DsaAppTheme
 import com.dsafun.app.ui.theme.Motion
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
@@ -124,7 +138,8 @@ fun MainApp(
 @Composable
 fun MainAppContent(
     deepLinkProblemId: Long? = null,
-    windowSizeClass: WindowSizeClass
+    windowSizeClass: WindowSizeClass,
+    preferencesRepository: PreferencesRepository = hiltViewModel<com.dsafun.app.ui.viewmodels.SettingsViewModel>().preferencesRepository
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -137,6 +152,27 @@ fun MainAppContent(
         viewModelStoreOwner = activity ?: context as ComponentActivity
     )
     val timerUiState by timerViewModel.uiState.collectAsState()
+    
+    // Milestone congratulations dialog state
+    val totalProblemsSolved by preferencesRepository.totalProblemsSolved.collectAsState(initial = 0)
+    val lastMilestoneShown by preferencesRepository.lastMilestoneShown.collectAsState(initial = 0)
+    var showMilestoneDialog by remember { mutableStateOf(false) }
+    var currentMilestone by remember { mutableStateOf(0) }
+    
+    // Check for milestone
+    LaunchedEffect(totalProblemsSolved) {
+        if (totalProblemsSolved > 0) {
+            val milestone = if (totalProblemsSolved == 1) 1
+                           else if (totalProblemsSolved % 30 == 0) totalProblemsSolved
+                           else 0
+            
+            if (milestone > 0 && milestone > lastMilestoneShown) {
+                currentMilestone = milestone
+                showMilestoneDialog = true
+                preferencesRepository.setLastMilestoneShown(milestone)
+            }
+        }
+    }
     
     // Determine if we should use NavigationRail (tablets) or BottomNav (phones)
     val useNavigationRail = windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact
@@ -181,6 +217,9 @@ fun MainAppContent(
                     val hideBottomNavigation = currentRoute?.startsWith("problem_detail/") == true ||
                         currentRoute?.startsWith("code_editor/") == true ||
                         currentRoute == Screen.LeetCode.route ||
+                        currentRoute == Screen.ApnaCollege.route ||
+                        currentRoute == Screen.Fraz.route ||
+                        currentRoute == Screen.LoveBabbar.route ||
                         currentRoute == Screen.CommonProblems.route
 
                     if (!hideBottomNavigation) {
@@ -225,6 +264,62 @@ fun MainAppContent(
             }
         }
     }
+    
+    // Milestone Congratulations Dialog - App-wide
+    if (showMilestoneDialog) {
+        val context = LocalContext.current
+        val milestoneMessage = when (currentMilestone) {
+            1 -> "You've solved your first problem!"
+            30 -> "Amazing! You've solved 30 problems!"
+            60 -> "Incredible! You've solved 60 problems!"
+            90 -> "Outstanding! You've solved 90 problems!"
+            else -> "Fantastic! You've solved $currentMilestone problems!"
+        }
+        
+        AlertDialog(
+            onDismissRequest = { showMilestoneDialog = false },
+            title = {
+                Text(
+                    text = "🎉 Congratulations! 🎉",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            },
+            text = {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(
+                        text = milestoneMessage,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text = "Hope you enjoy the app! It takes a lot of effort to build and maintain.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = "Please give us a ⭐ on GitHub and keep coding!",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            },
+            confirmButton = {
+                Button(onClick = { showMilestoneDialog = false }) {
+                    Text("Keep Coding! 💪")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/harshal20m/DSAFUN"))
+                        context.startActivity(intent)
+                        showMilestoneDialog = false
+                    }
+                ) {
+                    Text("⭐ Star on GitHub")
+                }
+            }
+        )
+    }
 }
 
 @Composable
@@ -249,6 +344,18 @@ fun NavigationGraph(
                 },
                 onNavigateToSettings = {
                     navController.navigate(Screen.Settings.route)
+                },
+                onNavigateToProblems = {
+                    navController.navigate(Screen.Problems.route)
+                },
+                onNavigateToTimer = {
+                    navController.navigate(Screen.Timer.route)
+                },
+                onNavigateToAnalytics = {
+                    navController.navigate(Screen.Analytics.route)
+                },
+                onNavigateToStreak = {
+                    navController.navigate(Screen.Streak.route)
                 }
             )
         }
@@ -263,6 +370,15 @@ fun NavigationGraph(
                 onCommonProblemsClick = {
                     navController.navigate(Screen.CommonProblems.route)
                 },
+                onApnaCollegeClick = {
+                    navController.navigate(Screen.ApnaCollege.route)
+                },
+                onFrazClick = {
+                    navController.navigate(Screen.Fraz.route)
+                },
+                onLoveBabbarClick = {
+                    navController.navigate(Screen.LoveBabbar.route)
+                },
                 showCollectionsOnly = true
             )
         }
@@ -275,11 +391,31 @@ fun NavigationGraph(
                     navController.navigate(Screen.LeetCode.route)
                 },
                 onCommonProblemsClick = {},
+                onApnaCollegeClick = {
+                    navController.navigate(Screen.ApnaCollege.route)
+                },
+                onFrazClick = {
+                    navController.navigate(Screen.Fraz.route)
+                },
+                onLoveBabbarClick = {
+                    navController.navigate(Screen.LoveBabbar.route)
+                },
                 showCollectionsOnly = false
             )
         }
         composable(Screen.LeetCode.route) {
             LeetCodeScreen()
+        }
+        composable(Screen.ApnaCollege.route) {
+            ApnaCollegeScreen()
+        }
+        composable(Screen.Fraz.route) {
+            FrazScreen()
+        }
+        composable(Screen.LoveBabbar.route) {
+            LoveBabbarScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
         composable(
             route = Screen.ProblemDetail.route,

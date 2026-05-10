@@ -59,7 +59,7 @@ class CodeEditorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getProblemDetailUseCase: GetProblemDetailUseCase,
     private val userSolutionDao: UserSolutionDao,
-    private val preferencesRepository: PreferencesRepository,
+    internal val preferencesRepository: PreferencesRepository,
     private val progressRepository: ProgressRepository
 ) : ViewModel() {
 
@@ -383,6 +383,7 @@ class CodeEditorViewModel @Inject constructor(
             // Award XP for solving
             val xpGained = 50 // Fixed XP for marking as solved
             val levelUpEvent = preferencesRepository.awardXp(xpGained)
+            
             preferencesRepository.incrementProblemsSolved()
             
             // Record solve in daily progress (this updates today's solved count)
@@ -398,6 +399,7 @@ class CodeEditorViewModel @Inject constructor(
             )
         }
     }
+    
 
     override fun onCleared() {
         super.onCleared()

@@ -25,7 +25,8 @@ data class ProblemListUiState(
     val filter: ProblemFilter = ProblemFilter.EMPTY,
     val isSearchActive: Boolean = false,
     val isLoading: Boolean = true,
-    val error: String? = null
+    val error: String? = null,
+    val selectedTab: Int = 0 // 0 = All, 1 = Marked
 )
 
 @HiltViewModel
@@ -75,6 +76,10 @@ class ProblemListViewModel @Inject constructor(
 
     fun clearFilters() {
         updateFilter(ProblemFilter.EMPTY)
+    }
+
+    fun onTabSelected(tabIndex: Int) {
+        _uiState.value = _uiState.value.copy(selectedTab = tabIndex)
     }
 
     private fun updateFilter(filter: ProblemFilter) {

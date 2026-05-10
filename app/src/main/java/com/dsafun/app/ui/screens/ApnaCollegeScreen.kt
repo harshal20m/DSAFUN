@@ -22,12 +22,12 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowOutward
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AssistChip
@@ -53,6 +53,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,31 +62,45 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.dsafun.app.ui.components.DifficultyBadge
+import com.dsafun.app.data.local.datastore.UserPreferencesDataStore
+import com.dsafun.app.ui.components.CollectionReminderSettings
+import com.dsafun.app.ui.components.CreatorInfo
+import com.dsafun.app.ui.components.CreatorInfoDialog
 import com.dsafun.app.ui.components.EmptyStates
-import com.dsafun.app.ui.components.TopicTag
 import com.dsafun.app.ui.theme.Dimens
 import com.dsafun.app.ui.theme.Motion
+import com.dsafun.app.workers.CollectionReminderWorker
+import com.dsafun.app.workers.WorkerScheduler
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun LeetCodeScreen(
-    viewModel: LeetCodeViewModel = hiltViewModel()
+fun ApnaCollegeScreen(
+    viewModel: ApnaCollegeViewModel = hiltViewModel(),
+    userPreferences: UserPreferencesDataStore = hiltViewModel<com.dsafun.app.ui.viewmodels.SettingsViewModel>().let {
+        UserPreferencesDataStore(LocalContext.current)
+    },
+    workerScheduler: WorkerScheduler = WorkerScheduler(LocalContext.current)
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val uiState by viewModel.uiState.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
     var isSearchActive by remember { mutableStateOf(false) }
-    var selectedDifficulty by remember { mutableStateOf<String?>(null) }
     var selectedTopic by remember { mutableStateOf<String?>(null) }
     var showFilters by remember { mutableStateOf(false) }
+    var showCreatorInfo by remember { mutableStateOf(false) }
+    
+    // Reminder settings
+    val reminderEnabled by userPreferences.apnaCollegeReminderEnabled.collectAsState(initial = false)
+    val reminderHour by userPreferences.apnaCollegeReminderHour.collectAsState(initial = 10)
+    val reminderMinute by userPreferences.apnaCollegeReminderMinute.collectAsState(initial = 0)
 
     val availableTopics = remember(uiState.problems) {
         uiState.problems
-            .flatMap { problem -> problem.topics }
-            .map { topic -> topic.trim() }
-            .filter { topic -> topic.isNotBlank() }
+            .map { it.topic.trim() }
+            .filter { it.isNotBlank() }
             .distinct()
             .sorted()
     }
@@ -93,22 +108,17 @@ fun LeetCodeScreen(
     val filteredProblems = remember(
         uiState.problems,
         searchQuery,
-        selectedDifficulty,
         selectedTopic
     ) {
-        uiState.problems.filter { problem: LeetCodeProblemItem ->
+        uiState.problems.filter { problem ->
             val matchesQuery = searchQuery.isBlank() ||
                 problem.title.contains(searchQuery, ignoreCase = true) ||
-                problem.topics.any { topic: String -> topic.contains(searchQuery, ignoreCase = true) }
+                problem.topic.contains(searchQuery, ignoreCase = true) ||
+                problem.companies.contains(searchQuery, ignoreCase = true)
 
-            val matchesDifficulty =
-                selectedDifficulty == null || problem.difficulty == selectedDifficulty
-            val matchesTopic =
-                selectedTopic == null || problem.topics.any { topic: String ->
-                    topic.equals(selectedTopic, ignoreCase = true)
-                }
+            val matchesTopic = selectedTopic == null || problem.topic.equals(selectedTopic, ignoreCase = true)
 
-            matchesQuery && matchesDifficulty && matchesTopic
+            matchesQuery && matchesTopic
         }
     }
 
@@ -134,7 +144,7 @@ fun LeetCodeScreen(
                 Tab(
                     selected = uiState.selectedTab == 0,
                     onClick = { viewModel.onTabSelected(0) },
-                    text = { Text("All Problems") }
+                    text = { Text("All (${filteredProblems.size})") }
                 )
                 Tab(
                     selected = uiState.selectedTab == 1,
@@ -148,133 +158,158 @@ fun LeetCodeScreen(
             // All Problems Tab
             item {
                 SearchBar(
-                query = searchQuery,
-                onQueryChange = { searchQuery = it },
-                onSearch = { isSearchActive = false },
-                active = isSearchActive,
-                onActiveChange = { isSearchActive = it },
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Search LeetCode problems...") },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search LeetCode") },
-                trailingIcon = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        TextButton(onClick = { showFilters = !showFilters }) {
-                            Text(if (showFilters) "Hide Filters" else "Show Filters")
-                        }
-                        if (searchQuery.isNotEmpty()) {
-                            IconButton(onClick = { searchQuery = "" }) {
-                                Icon(Icons.Default.Close, contentDescription = "Clear search")
+                    query = searchQuery,
+                    onQueryChange = { searchQuery = it },
+                    onSearch = { isSearchActive = false },
+                    active = isSearchActive,
+                    onActiveChange = { isSearchActive = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text("Search Apna College problems...") },
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+                    trailingIcon = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            TextButton(onClick = { showFilters = !showFilters }) {
+                                Text(if (showFilters) "Hide Filters" else "Show Filters")
+                            }
+                            if (searchQuery.isNotEmpty()) {
+                                IconButton(onClick = { searchQuery = "" }) {
+                                    Icon(Icons.Default.Close, contentDescription = "Clear search")
+                                }
                             }
                         }
                     }
-                }
-            ) {}
-        }
+                ) {}
+            }
 
             item {
-                Text(
-                    text = "LeetCode Practice",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Apna College DSA Sheet",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.weight(1f)
+                    )
+                    IconButton(onClick = { showCreatorInfo = true }) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = "Creator Info",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
             }
 
             item {
                 Text(
-                    text = "Search, filter, open in browser, and manually mark solved to count toward app progress.",
+                    text = "Curated by Shradha Didi & Aman Bhaiya. Search, filter, open in browser, and mark solved.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            
+            // Reminder Settings
+            item {
+                CollectionReminderSettings(
+                    collectionName = "Apna College",
+                    isEnabled = reminderEnabled,
+                    reminderHour = reminderHour,
+                    reminderMinute = reminderMinute,
+                    onEnabledChange = { enabled ->
+                        scope.launch {
+                            userPreferences.setApnaCollegeReminderEnabled(enabled)
+                            workerScheduler.scheduleCollectionReminder(
+                                CollectionReminderWorker.COLLECTION_APNA_COLLEGE,
+                                reminderHour,
+                                reminderMinute,
+                                enabled
+                            )
+                        }
+                    },
+                    onTimeChange = { hour, minute ->
+                        scope.launch {
+                            userPreferences.setApnaCollegeReminderTime(hour, minute)
+                            if (reminderEnabled) {
+                                workerScheduler.scheduleCollectionReminder(
+                                    CollectionReminderWorker.COLLECTION_APNA_COLLEGE,
+                                    hour,
+                                    minute,
+                                    true
+                                )
+                            }
+                        }
+                    }
                 )
             }
 
             item {
                 AnimatedVisibility(
-                visible = showFilters && !isSearchActive,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth()
+                    visible = showFilters && !isSearchActive,
+                    enter = fadeIn(),
+                    exit = fadeOut()
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(Dimens.SpacingSmall)
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        FilterChip(
-                            selected = selectedDifficulty == null,
-                            onClick = { selectedDifficulty = null },
-                            label = { Text("All") }
-                        )
-                        listOf("Easy", "Medium", "Hard").forEach { difficulty: String ->
-                            FilterChip(
-                                selected = selectedDifficulty == difficulty,
-                                onClick = {
-                                    selectedDifficulty =
-                                        if (selectedDifficulty == difficulty) null else difficulty
-                                },
-                                label = { Text(difficulty) }
+                        if (availableTopics.isNotEmpty()) {
+                            Text(
+                                text = "Topics",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                        }
-                    }
-
-                    if (availableTopics.isNotEmpty()) {
-                        Spacer(modifier = Modifier.height(Dimens.SpacingMedium))
-                        Text(
-                            text = "Topics",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Spacer(modifier = Modifier.height(Dimens.SpacingSmall))
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(Dimens.SpacingSmall),
-                            verticalArrangement = Arrangement.spacedBy(Dimens.SpacingSmall)
-                        ) {
-                            FilterChip(
-                                selected = selectedTopic == null,
-                                onClick = { selectedTopic = null },
-                                label = { Text("All Topics") }
-                            )
-                            availableTopics.take(24).forEach { topic: String ->
-                                FilterChip(
-                                    selected = selectedTopic == topic,
-                                    onClick = {
-                                        selectedTopic = if (selectedTopic == topic) null else topic
-                                    },
-                                    label = { Text(topic) }
-                                )
-                            }
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(Dimens.SpacingMedium))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Showing ${filteredProblems.size} problem${if (filteredProblems.size != 1) "s" else ""}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Medium
-                        )
-                        if (searchQuery.isNotBlank() || selectedDifficulty != null || selectedTopic != null) {
-                            TextButton(
-                                onClick = {
-                                    searchQuery = ""
-                                    selectedDifficulty = null
-                                    selectedTopic = null
-                                }
+                            Spacer(modifier = Modifier.height(Dimens.SpacingSmall))
+                            FlowRow(
+                                horizontalArrangement = Arrangement.spacedBy(Dimens.SpacingSmall),
+                                verticalArrangement = Arrangement.spacedBy(Dimens.SpacingSmall)
                             ) {
-                                Text("Clear Filters")
+                                FilterChip(
+                                    selected = selectedTopic == null,
+                                    onClick = { selectedTopic = null },
+                                    label = { Text("All Topics") }
+                                )
+                                availableTopics.forEach { topic ->
+                                    FilterChip(
+                                        selected = selectedTopic == topic,
+                                        onClick = {
+                                            selectedTopic = if (selectedTopic == topic) null else topic
+                                        },
+                                        label = { Text(topic) }
+                                    )
+                                }
                             }
                         }
-                    }
 
-                    Divider(modifier = Modifier.padding(top = Dimens.SpacingSmall))
+                        Spacer(modifier = Modifier.height(Dimens.SpacingMedium))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Showing ${filteredProblems.size} problem${if (filteredProblems.size != 1) "s" else ""}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium
+                            )
+                            if (searchQuery.isNotBlank() || selectedTopic != null) {
+                                TextButton(
+                                    onClick = {
+                                        searchQuery = ""
+                                        selectedTopic = null
+                                    }
+                                ) {
+                                    Text("Clear Filters")
+                                }
+                            }
+                        }
+
+                        Divider(modifier = Modifier.padding(top = Dimens.SpacingSmall))
+                    }
                 }
             }
-        }
 
             if (uiState.completionMessage != null) {
                 item {
@@ -313,7 +348,7 @@ fun LeetCodeScreen(
                 uiState.error != null -> {
                     item {
                         EmptyStates.GenericError(
-                            message = uiState.error ?: "Failed to load LeetCode problems",
+                            message = uiState.error ?: "Failed to load Apna College problems",
                             onRetry = { viewModel.loadProblems() }
                         )
                     }
@@ -328,9 +363,9 @@ fun LeetCodeScreen(
                 else -> {
                     items(
                         items = filteredProblems,
-                        key = { problem: LeetCodeProblemItem -> "${problem.id}-${problem.title}" }
+                        key = { problem -> "${problem.id}-${problem.title}" }
                     ) { problem ->
-                        LeetCodeProblemCard(
+                        ApnaCollegeProblemCard(
                             problem = problem,
                             index = filteredProblems.indexOf(problem),
                             isSolved = uiState.solvedProblemIds.contains(problem.id),
@@ -351,7 +386,7 @@ fun LeetCodeScreen(
             // Marked Tab
             item {
                 Text(
-                    text = "Marked LeetCode Problems",
+                    text = "Marked Apna College Problems",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
@@ -388,9 +423,9 @@ fun LeetCodeScreen(
                 else -> {
                     items(
                         items = markedProblems,
-                        key = { problem: LeetCodeProblemItem -> "marked_${problem.id}-${problem.title}" }
+                        key = { problem -> "marked_${problem.id}-${problem.title}" }
                     ) { problem ->
-                        LeetCodeProblemCard(
+                        ApnaCollegeProblemCard(
                             problem = problem,
                             index = markedProblems.indexOf(problem),
                             isSolved = true,
@@ -409,12 +444,26 @@ fun LeetCodeScreen(
             }
         }
     }
+    
+    // Creator Info Dialog
+    if (showCreatorInfo) {
+        CreatorInfoDialog(
+            creatorInfo = CreatorInfo(
+                name = "Shradha Khapra & Aman Dhattarwal",
+                brand = "Apna College",
+                website = "https://www.apnacollege.in/",
+                youtube = "https://www.youtube.com/@ApnaCollegeOfficial",
+                linkedin = null
+            ),
+            onDismiss = { showCreatorInfo = false }
+        )
+    }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun LeetCodeProblemCard(
-    problem: LeetCodeProblemItem,
+private fun ApnaCollegeProblemCard(
+    problem: ApnaCollegeProblemItem,
     index: Int,
     isSolved: Boolean,
     isUpdating: Boolean,
@@ -431,7 +480,7 @@ private fun LeetCodeProblemCard(
     val alpha by animateFloatAsState(
         targetValue = if (visible) 1f else 0f,
         animationSpec = Motion.TweenMedium,
-        label = "leetcode_card_alpha"
+        label = "apna_college_card_alpha"
     )
 
     Card(
@@ -442,7 +491,7 @@ private fun LeetCodeProblemCard(
             containerColor = if (isSolved) {
                 MaterialTheme.colorScheme.secondaryContainer
             } else {
-                MaterialTheme.colorScheme.surface
+                MaterialTheme.colorScheme.surfaceVariant
             }
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = Dimens.CardElevation),
@@ -462,9 +511,7 @@ private fun LeetCodeProblemCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Top
             ) {
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = problem.title,
                         style = MaterialTheme.typography.titleMedium,
@@ -472,9 +519,9 @@ private fun LeetCodeProblemCard(
                     )
                     Spacer(modifier = Modifier.height(Dimens.SpacingXSmall))
                     Text(
-                        text = "LeetCode #${problem.id}",
+                        text = problem.topic,
                         style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
 
@@ -487,56 +534,24 @@ private fun LeetCodeProblemCard(
                 }
             }
 
-            Spacer(modifier = Modifier.height(Dimens.SpacingSmall))
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(Dimens.SpacingSmall),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                DifficultyBadge(difficulty = problem.difficulty)
-                problem.topics.firstOrNull()?.takeIf { it.isNotBlank() }?.let { topic ->
-                    TopicTag(topic = topic)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(Dimens.SpacingSmall))
-
-            Text(
-                text = "${problem.acceptanceRate}% acceptance",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-
-            if (problem.description.isNotBlank()) {
+            if (problem.companies.isNotBlank()) {
                 Spacer(modifier = Modifier.height(Dimens.SpacingSmall))
                 Text(
-                    text = problem.description,
-                    style = MaterialTheme.typography.bodyMedium,
+                    text = "Companies: ${problem.companies}",
+                    style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 4
+                    maxLines = 2
                 )
             }
 
-            if (problem.topics.size > 1) {
-                Spacer(modifier = Modifier.height(Dimens.SpacingSmall))
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(Dimens.SpacingSmall),
-                    verticalArrangement = Arrangement.spacedBy(Dimens.SpacingSmall)
-                ) {
-                    problem.topics.drop(1).take(4).forEach { topic: String ->
-                        Surface(
-                            color = MaterialTheme.colorScheme.secondaryContainer,
-                            shape = MaterialTheme.shapes.small
-                        ) {
-                            Text(
-                                text = topic,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSecondaryContainer
-                            )
-                        }
-                    }
-                }
+            if (problem.remarks.isNotBlank()) {
+                Spacer(modifier = Modifier.height(Dimens.SpacingXSmall))
+                Text(
+                    text = "💡 ${problem.remarks}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    fontWeight = FontWeight.Medium
+                )
             }
 
             Spacer(modifier = Modifier.height(Dimens.SpacingMedium))
@@ -545,33 +560,43 @@ private fun LeetCodeProblemCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(Dimens.SpacingSmall)
             ) {
-                AssistChip(
+                OutlinedButton(
                     onClick = onOpen,
-                    label = { Text("Open") },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.ArrowOutward,
-                            contentDescription = "Open in browser"
-                        )
-                    }
-                )
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowOutward,
+                        contentDescription = "Open in browser"
+                    )
+                    Spacer(modifier = Modifier.padding(start = Dimens.SpacingXSmall))
+                    Text("Open")
+                }
 
                 OutlinedButton(
                     onClick = onToggleSolved,
-                    enabled = !isUpdating
+                    enabled = !isUpdating,
+                    modifier = Modifier.weight(1f)
                 ) {
-                    Text(if (isSolved) "Mark Unsolved" else "Mark Solved")
+                    if (isUpdating) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.padding(end = Dimens.SpacingXSmall)
+                        )
+                    } else {
+                        Icon(
+                            imageVector = if (isSolved) Icons.Default.Close else Icons.Default.CheckCircle,
+                            contentDescription = if (isSolved) "Mark unsolved" else "Mark solved"
+                        )
+                        Spacer(modifier = Modifier.padding(start = Dimens.SpacingXSmall))
+                    }
+                    Text(if (isSolved) "Unsolved" else "Solved")
                 }
             }
         }
     }
 }
 
-// Made with Bob
-
-
 @Composable
-private fun LeetCodeStatsCard(
+private fun ApnaCollegeStatsCard(
     totalSolved: Int,
     totalProblems: Int
 ) {
@@ -582,7 +607,7 @@ private fun LeetCodeStatsCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -598,20 +623,20 @@ private fun LeetCodeStatsCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "LeetCode Progress",
+                    text = "Apna College Progress",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                    color = MaterialTheme.colorScheme.onTertiaryContainer
                 )
                 Icon(
                     imageVector = Icons.Default.Star,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.secondary
+                    tint = MaterialTheme.colorScheme.tertiary
                 )
             }
 
             Divider(
-                color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.2f),
+                color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.2f),
                 modifier = Modifier.padding(vertical = Dimens.SpacingXSmall)
             )
 
@@ -627,12 +652,12 @@ private fun LeetCodeStatsCard(
                         text = totalSolved.toString(),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.secondary
+                        color = MaterialTheme.colorScheme.tertiary
                     )
                     Text(
                         text = "Solved",
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                        color = MaterialTheme.colorScheme.onTertiaryContainer
                     )
                 }
                 Column(
@@ -643,12 +668,12 @@ private fun LeetCodeStatsCard(
                         text = totalProblems.toString(),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.secondary
+                        color = MaterialTheme.colorScheme.tertiary
                     )
                     Text(
                         text = "Total",
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                        color = MaterialTheme.colorScheme.onTertiaryContainer
                     )
                 }
                 Column(
@@ -659,15 +684,17 @@ private fun LeetCodeStatsCard(
                         text = "$solvedPercentage%",
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.secondary
+                        color = MaterialTheme.colorScheme.tertiary
                     )
                     Text(
                         text = "Complete",
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                        color = MaterialTheme.colorScheme.onTertiaryContainer
                     )
                 }
             }
         }
     }
 }
+
+// Made with Bob

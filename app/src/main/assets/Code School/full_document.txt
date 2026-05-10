@@ -1,0 +1,169 @@
+SUMMER VACATION DSA PROBLEM SHEET
+The Code Skool
+Arrays (5 days)
+Array Basics (2 days)
+Theory (0.5 days)
+C++ Arrays (With Examples)
+Java Array (With Examples)
+Python Array (With Examples)
+Problems (1.5 days)
+Wave Array | Practice | GeeksforGeeks
+Sort an array of 0s, 1s and 2s | Practice | GeeksforGeeks
+Subarray with given sum | Practice | GeeksforGeeks
+Kadane's Algorithm | Practice | GeeksforGeeks
+Missing number in array | Practice | GeeksforGeeks
+Binary Search (2 days)
+Theory (0.5 days)
+https://www.geeksforgeeks.org/binary-search/
+Problems (1.5 days)
+Search Insert Position - LeetCode
+Sqrt(x) - LeetCode
+Find Smallest Letter Greater Than Target - LeetCode
+Kth Smallest Element in a Sorted Matrix - LeetCode
+Two Pointers (1 day)
+Theory (about 1 hr)
+https://www.geeksforgeeks.org/two-pointers-technique/
+Problems (1 day)
+3 Sum | Interviewbit
+Merge Two Sorted Lists II | Interviewbit
+Remove Duplicates from Sorted Array | Interviewbit
+Strings (2 days)
+String Basics (2 days)
+Integer To Roman | Interviewbit
+Reverse the String | Interviewbit
+Implement StrStr | Interviewbit
+Vowel and Consonant Substrings! | Interviewbit
+Longest Common Prefix | Interviewbit
+Longest Palindromic Substring | Interviewbit
+Linked Lists (4 days)
+Theory (1 day)
+https://www.programiz.com/dsa/linked-list
+Problems (3 days)
+Reverse a linked list - GeeksforGeeks
+​​Rotate a Linked List - GeeksforGeeks
+Function to check if a singly linked list is palindrome - GeeksforGeeks
+Nth node from end of linked list | Practice | GeeksforGeeks
+Detect Loop in linked list | Practice | GeeksforGeeks
+Find the middle of a given linked list - GeeksforGeeks
+Delete N nodes after M nodes of a linked list - GeeksforGeeks
+Reverse a Linked List in groups of given size. | Practice | GeeksforGeeks
+Reverse alternate K nodes in a Singly Linked List - GeeksforGeeks
+Stacks and Queues (5 days)
+Theory (2 days)
+https://www.programiz.com/dsa/stack
+https://www.geeksforgeeks.org/stack-in-cpp-stl/
+https://www.geeksforgeeks.org/stack-class-in-java/
+https://www.geeksforgeeks.org/stack-in-python/
+https://www.programiz.com/dsa/queue
+https://www.geeksforgeeks.org/queue-cpp-stl/
+https://www.geeksforgeeks.org/queue-interface-java/
+https://www.geeksforgeeks.org/queue-in-python/
+Problems (3 days)
+Balanced Parantheses! | Interviewbit
+Redundant Braces | Interviewbit
+Nearest Smaller Element | Interviewbit
+Largest Rectangle in Histogram | Interviewbit
+Min Stack | Interviewbit
+First Unique Character in a String - LeetCode
+Implement Stack using Queues - LeetCode
+Time Needed to Buy Tickets - LeetCode
+Implement Queue using Stacks - LeetCode
+Hashing (3 days)
+Theory (1 day)
+https://www.programiz.com/dsa/hash-table
+https://www.geeksforgeeks.org/unordered_map-in-cpp-stl/
+https://www.geeksforgeeks.org/java-util-hashmap-in-java-with-examples/
+https://www.geeksforgeeks.org/hash-map-in-python/
+Problems (2 days)
+Largest subarray of 0's and 1's | Practice | GeeksforGeeks
+Find All Four Sum Numbers | Practice | GeeksforGeeks
+Array Subset of another array | Practice | GeeksforGeeks
+Sorting Elements of an Array by Frequency | Practice | GeeksforGeeks
+Union of Two Linked Lists | Practice | GeeksforGeeks
+Top K Frequent Elements in Array - | | Practice | GeeksforGeeks
+Tree-based Data Structures (7 days)
+Binary Tree & BST (5 days)
+Theory (1 day)
+https://www.geeksforgeeks.org/introduction-to-tree-data-structure/
+https://www.geeksforgeeks.org/binary-tree-set-1-introduction/?ref=lbp
+https://www.geeksforgeeks.org/binary-tree-set-2-properties/?ref=lbp
+https://www.geeksforgeeks.org/binary-tree-set-3-types-of-binary-tree/?ref=lbp
+Problems (4 days)
+Inorder Traversal | Interviewbit
+Preorder Traversal | Interviewbit
+Postorder Traversal | Interviewbit
+Max Depth of Binary Tree | Interviewbit
+Right view of Binary tree | Interviewbit
+Sorted Array To Balanced BST | Interviewbit
+Root to Leaf Paths With Sum | Interviewbit
+ZigZag Level Order Traversal BT | Interviewbit
+Symmetric Binary Tree | Interviewbit
+Balanced Binary Tree | Interviewbit
+Valid BST from Preorder | Interviewbit
+Kth Smallest Element In Tree | Interviewbit
+Heaps (1 day)
+Theory
+https://www.geeksforgeeks.org/binary-heap/
+Problems
+K Largest Elements | Interviewbit
+Merge K Sorted Lists | Interviewbit
+Trie (1 day)
+Theory
+https://www.geeksforgeeks.org/advantages-trie-data-structure/?ref=lbp
+https://www.geeksforgeeks.org/trie-insert-and-search/?ref=lbp
+https://www.geeksforgeeks.org/trie-delete/?ref=lbp
+Problems
+Hotel Reviews | Interviewbit
+Shortest Unique Prefix | Interviewbit
+Dynamic Programming (8 Days)
+Theory (3 days)
+https://www.youtube.com/watch?v=OQ5jsbhAv_M&list=PLcDimPvbmfT8qAxD6JH_kmXiQwTNcoK78
+https://www.youtube.com/watch?v=ENyox7kNKeY&list=PLcDimPvbmfT8qAxD6JH_kmXiQwTNcoK78&index=2
+https://www.youtube.com/watch?v=ocZMDMZwhCY&list=PLcDimPvbmfT8qAxD6JH_kmXiQwTNcoK78&index=3
+https://www.geeksforgeeks.org/program-for-nth-fibonacci-number/
+https://www.geeksforgeeks.org/0-1-knapsack-problem-dp-10/
+https://www.geeksforgeeks.org/longest-increasing-subsequence-dp-3/
+https://www.geeksforgeeks.org/longest-common-subsequence-dp-4/
+https://www.geeksforgeeks.org/longest-common-substring-dp-29/
+Problems (5 Days)
+Nth Fibonacci Number | Practice | GeeksforGeeks
+0 - 1 Knapsack Problem | Practice | GeeksforGeeks
+Coin Change | Practice | GeeksforGeeks
+nCr | Practice | GeeksforGeeks
+Longest Increasing Subsequence | Practice | GeeksforGeeks
+Longest Common Subsequence | Practice | GeeksforGeeks
+Longest Common Substring | Practice | GeeksforGeeks
+Edit Distance | Interviewbit
+Ways to Decode | Interviewbit
+Longest valid Parentheses | Interviewbit
+Dungeon Princess | Interviewbit
+Max Product Subarray | Interviewbit
+Max Sum Without Adjacent Elements | Interviewbit
+Best Time to Buy and Sell Stocks I | Interviewbit
+Best Time to Buy and Sell Stocks II | Interviewbit
+Graphs (8 Days)
+Theory (3 days)
+https://www.geeksforgeeks.org/graph-and-its-representations/
+https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/
+https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/
+https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/
+https://www.geeksforgeeks.org/prims-minimum-spanning-tree-mst-greedy-algo-5/
+https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/
+https://www.geeksforgeeks.org/floyd-warshall-algorithm-dp-16/
+https://www.geeksforgeeks.org/union-find-algorithm-union-rank-find-optimized-path-compression/
+Practice (5 days)
+BFS of graph | Practice | GeeksforGeeks
+DFS of Graph | Practice | GeeksforGeeks
+Find the number of islands | Practice | GeeksforGeeks
+Implementing Dijkstra Algorithm | Practice | GeeksforGeeks
+Detect cycle in a directed graph | Practice | GeeksforGeeks
+Detect cycle in an undirected graph | Practice | GeeksforGeeks
+Topological sort | Practice | GeeksforGeeks
+Minimum Spanning Tree | Practice | GeeksforGeeks
+Unit Area of largest region of 1's | Practice | GeeksforGeeks
+Floyd Warshall | Practice | GeeksforGeeks
+Shortest path from 1 to n | Practice | GeeksforGeeks
+Covid Spread | Practice | GeeksforGeeks
+Distance from the Source (Bellman-Ford Algorithm) | Practice | GeeksforGeeks
+Biconnected Graph | Practice | GeeksforGeeks
+Union-Find | Practice | GeeksForGeeks

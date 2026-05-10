@@ -205,7 +205,8 @@ fun SessionTypeSelector(
                     label = {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier.height(48.dp)
                         ) {
                             Text(
                                 text = when (type) {
@@ -216,7 +217,8 @@ fun SessionTypeSelector(
                                 },
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     fontWeight = if (selectedType == type) FontWeight.Bold else FontWeight.Medium
-                                )
+                                ),
+                                maxLines = 1
                             )
                             Text(
                                 text = "${type.durationMinutes}m",
@@ -337,7 +339,7 @@ fun LinkedProblemCard(
             else
                 MaterialTheme.colorScheme.surfaceVariant
         ),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = if (problem != null) 2.dp else 0.dp
         )
@@ -345,13 +347,13 @@ fun LinkedProblemCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(10.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
                 modifier = Modifier.weight(1f),
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Icon
@@ -362,7 +364,7 @@ fun LinkedProblemCard(
                         MaterialTheme.colorScheme.primary
                     else
                         MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(18.dp)
                 )
                 
                 Column(modifier = Modifier.weight(1f)) {
@@ -380,12 +382,12 @@ fun LinkedProblemCard(
                     
                     if (problem != null) {
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.padding(top = 2.dp)
                         ) {
                             Surface(
-                                shape = RoundedCornerShape(6.dp),
+                                shape = RoundedCornerShape(4.dp),
                                 color = when (problem.difficulty) {
                                     "Easy" -> Color(0xFF4CAF50).copy(alpha = 0.15f)
                                     "Medium" -> Color(0xFFFF9800).copy(alpha = 0.15f)
@@ -396,20 +398,20 @@ fun LinkedProblemCard(
                                     text = problem.difficulty,
                                     style = MaterialTheme.typography.labelSmall.copy(
                                         fontWeight = FontWeight.Bold,
-                                        fontSize = 10.sp
+                                        fontSize = 9.sp
                                     ),
                                     color = when (problem.difficulty) {
                                         "Easy" -> Color(0xFF4CAF50)
                                         "Medium" -> Color(0xFFFF9800)
                                         else -> Color(0xFFF44336)
                                     },
-                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
                                 )
                             }
                             
                             Text(
                                 text = problem.topic,
-                                style = MaterialTheme.typography.labelSmall,
+                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
                                 color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.6f),
                                 maxLines = 1
                             )
@@ -423,7 +425,7 @@ fun LinkedProblemCard(
                     imageVector = Icons.Default.Add,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(28.dp)
+                    modifier = Modifier.size(24.dp)
                 )
             }
         }
@@ -664,36 +666,37 @@ fun ProblemPickerDialog(
     
     AlertDialog(
         onDismissRequest = onDismiss,
-        modifier = Modifier.fillMaxWidth(0.95f)
+        modifier = Modifier.fillMaxWidth(0.92f)
     ) {
         Surface(
-            shape = RoundedCornerShape(24.dp),
+            shape = RoundedCornerShape(20.dp),
             color = MaterialTheme.colorScheme.surface,
             tonalElevation = 6.dp
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 600.dp)
+                    .heightIn(max = 550.dp)
             ) {
                 // Header
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(24.dp),
+                        .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = "Link a Problem",
-                        style = MaterialTheme.typography.headlineSmall.copy(
+                        style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold
                         )
                     )
                     IconButton(onClick = onDismiss) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Close"
+                            contentDescription = "Close",
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                 }
@@ -704,33 +707,34 @@ fun ProblemPickerDialog(
                     onValueChange = { searchQuery = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 24.dp),
-                    placeholder = { Text("Search problems...") },
+                        .padding(horizontal = 16.dp),
+                    placeholder = { Text("Search problems...", style = MaterialTheme.typography.bodySmall) },
                     leadingIcon = {
-                        Icon(Icons.Default.Search, contentDescription = null)
+                        Icon(Icons.Default.Search, contentDescription = null, modifier = Modifier.size(20.dp))
                     },
                     singleLine = true,
-                    shape = RoundedCornerShape(16.dp)
+                    shape = RoundedCornerShape(12.dp),
+                    textStyle = MaterialTheme.typography.bodyMedium
                 )
                 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(12.dp))
                 
                 // Difficulty Filter
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 24.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     FilterChip(
                         selected = selectedDifficulty == null,
                         onClick = { selectedDifficulty = null },
-                        label = { Text("All") }
+                        label = { Text("All", style = MaterialTheme.typography.labelSmall) }
                     )
                     FilterChip(
                         selected = selectedDifficulty == "Easy",
                         onClick = { selectedDifficulty = "Easy" },
-                        label = { Text("Easy") },
+                        label = { Text("Easy", style = MaterialTheme.typography.labelSmall) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
                         )
@@ -738,7 +742,7 @@ fun ProblemPickerDialog(
                     FilterChip(
                         selected = selectedDifficulty == "Medium",
                         onClick = { selectedDifficulty = "Medium" },
-                        label = { Text("Medium") },
+                        label = { Text("Medium", style = MaterialTheme.typography.labelSmall) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f)
                         )
@@ -746,34 +750,34 @@ fun ProblemPickerDialog(
                     FilterChip(
                         selected = selectedDifficulty == "Hard",
                         onClick = { selectedDifficulty = "Hard" },
-                        label = { Text("Hard") },
+                        label = { Text("Hard", style = MaterialTheme.typography.labelSmall) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = MaterialTheme.colorScheme.error.copy(alpha = 0.3f)
                         )
                     )
                 }
                 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(12.dp))
                 
                 // Problems List
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
-                    contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     if (filteredProblems.isEmpty()) {
                         item {
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(32.dp),
+                                    .padding(24.dp),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
                                     text = "No problems found",
-                                    style = MaterialTheme.typography.bodyLarge,
+                                    style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
@@ -807,33 +811,35 @@ fun ProblemPickerItem(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         ),
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(10.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = problem.title,
-                    style = MaterialTheme.typography.bodyLarge.copy(
+                    style = MaterialTheme.typography.bodyMedium.copy(
                         fontWeight = FontWeight.Medium
                     ),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = problem.topic,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                    maxLines = 1
                 )
             }
             
             Surface(
-                shape = RoundedCornerShape(8.dp),
+                shape = RoundedCornerShape(6.dp),
                 color = when (problem.difficulty) {
                     "Easy" -> MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
                     "Medium" -> MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f)
@@ -843,14 +849,15 @@ fun ProblemPickerItem(
                 Text(
                     text = problem.difficulty,
                     style = MaterialTheme.typography.labelSmall.copy(
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 10.sp
                     ),
                     color = when (problem.difficulty) {
                         "Easy" -> MaterialTheme.colorScheme.secondary
                         "Medium" -> MaterialTheme.colorScheme.tertiary
                         else -> MaterialTheme.colorScheme.error
                     },
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }
         }

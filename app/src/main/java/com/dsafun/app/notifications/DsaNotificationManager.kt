@@ -126,11 +126,56 @@ class DsaNotificationManager @Inject constructor(
         notificationManager.notify(NOTIFICATION_ID_MILESTONE, notification)
     }
 
+    fun showCollectionReminderNotification(
+        collectionName: String,
+        problemTitle: String,
+        problemDescription: String,
+        problemId: Long,
+        difficulty: String
+    ) {
+        if (!hasNotificationPermission()) return
+
+        val difficultyEmoji = when (difficulty) {
+            "Easy" -> "🟢"
+            "Medium" -> "🟡"
+            "Hard" -> "🔴"
+            else -> "⚪"
+        }
+
+        val notification = NotificationCompat.Builder(context, NotificationChannels.DAILY_REMINDER)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle("$collectionName - Time to Practice! 📚")
+            .setContentText("$difficultyEmoji $problemTitle")
+            .setStyle(NotificationCompat.BigTextStyle().bigText(
+                "$difficultyEmoji $problemTitle\n\n$problemDescription\n\nContinue your learning journey and solve this problem!"
+            ))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .setContentIntent(createPendingIntent(problemId))
+            .build()
+
+        // Use collection-specific notification ID to allow multiple collection notifications
+        val notificationId = when (collectionName) {
+            "LeetCode" -> NOTIFICATION_ID_LEETCODE_REMINDER
+            "Apna College" -> NOTIFICATION_ID_APNA_COLLEGE_REMINDER
+            "DSA Sheet by Fraz" -> NOTIFICATION_ID_FRAZ_REMINDER
+            "Love Babbar 450" -> NOTIFICATION_ID_LOVE_BABBAR_REMINDER
+            else -> NOTIFICATION_ID_COLLECTION_REMINDER
+        }
+
+        notificationManager.notify(notificationId, notification)
+    }
+
     companion object {
         private const val NOTIFICATION_ID_DAILY_REMINDER = 1001
         private const val NOTIFICATION_ID_STREAK_WARNING = 1002
         private const val NOTIFICATION_ID_WEEKLY_SUMMARY = 1003
         private const val NOTIFICATION_ID_MILESTONE = 1004
+        private const val NOTIFICATION_ID_COLLECTION_REMINDER = 1005
+        private const val NOTIFICATION_ID_LEETCODE_REMINDER = 1006
+        private const val NOTIFICATION_ID_APNA_COLLEGE_REMINDER = 1007
+        private const val NOTIFICATION_ID_FRAZ_REMINDER = 1008
+        private const val NOTIFICATION_ID_LOVE_BABBAR_REMINDER = 1009
     }
 }
 

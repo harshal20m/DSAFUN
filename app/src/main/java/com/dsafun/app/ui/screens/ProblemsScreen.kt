@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -45,6 +46,9 @@ fun ProblemsScreen(
     onProblemClick: (Int) -> Unit,
     onLeetCodeClick: () -> Unit,
     onCommonProblemsClick: () -> Unit,
+    onApnaCollegeClick: () -> Unit = {},
+    onFrazClick: () -> Unit = {},
+    onLoveBabbarClick: () -> Unit = {},
     showCollectionsOnly: Boolean = false,
     viewModel: ProblemListViewModel = hiltViewModel()
 ) {
@@ -76,36 +80,71 @@ fun ProblemsScreen(
             item {
                 ProblemsCollectionsSection(
                     onCommonProblemsClick = onCommonProblemsClick,
-                    onLeetCodeClick = onLeetCodeClick
+                    onLeetCodeClick = onLeetCodeClick,
+                    onApnaCollegeClick = onApnaCollegeClick,
+                    onFrazClick = onFrazClick,
+                    onLoveBabbarClick = onLoveBabbarClick
                 )
             }
         } else {
+            // Global Stats Card
             item {
-                SearchBar(
-                    query = uiState.filter.searchQuery,
-                    onQueryChange = viewModel::onSearchQueryChanged,
-                    onSearch = { },
-                    active = uiState.isSearchActive,
-                    onActiveChange = viewModel::onSearchActiveChanged,
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = {
-                        Text("Search common problems...")
-                    },
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
-                    trailingIcon = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            TextButton(onClick = { showFilters = !showFilters }) {
-                                Text(if (showFilters) "Hide Filters" else "Show Filters")
-                            }
-                            if (uiState.filter.searchQuery.isNotEmpty()) {
-                                IconButton(onClick = { viewModel.onSearchQueryChanged("") }) {
-                                    Icon(Icons.Default.Close, contentDescription = "Clear")
+                GlobalStatsCard(
+                    totalSolved = uiState.solvedNativeProblemIds.size + uiState.solvedLeetCodeProblemIds.size,
+                    nativeSolved = uiState.solvedNativeProblemIds.size,
+                    leetCodeSolved = uiState.solvedLeetCodeProblemIds.size,
+                    totalMarked = uiState.markedNativeProblems.size + uiState.markedLeetCodeProblems.size
+                )
+            }
+
+            // Tab Row
+            item {
+                TabRow(
+                    selectedTabIndex = uiState.selectedTab,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Tab(
+                        selected = uiState.selectedTab == 0,
+                        onClick = { viewModel.onTabSelected(0) },
+                        text = { Text("All Problems") }
+                    )
+                    Tab(
+                        selected = uiState.selectedTab == 1,
+                        onClick = { viewModel.onTabSelected(1) },
+                        text = { Text("Marked") }
+                    )
+                }
+            }
+
+            // Show content based on selected tab
+            if (uiState.selectedTab == 0) {
+                // All Problems Tab
+                item {
+                    SearchBar(
+                        query = uiState.filter.searchQuery,
+                        onQueryChange = viewModel::onSearchQueryChanged,
+                        onSearch = { },
+                        active = uiState.isSearchActive,
+                        onActiveChange = viewModel::onSearchActiveChanged,
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = {
+                            Text("Search common problems...")
+                        },
+                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+                        trailingIcon = {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                TextButton(onClick = { showFilters = !showFilters }) {
+                                    Text(if (showFilters) "Hide Filters" else "Show Filters")
+                                }
+                                if (uiState.filter.searchQuery.isNotEmpty()) {
+                                    IconButton(onClick = { viewModel.onSearchQueryChanged("") }) {
+                                        Icon(Icons.Default.Close, contentDescription = "Clear")
+                                    }
                                 }
                             }
                         }
-                    }
-                ) {}
-            }
+                    ) {}
+                }
             item {
                 AnimatedVisibility(
                     visible = showFilters && !uiState.isSearchActive,
@@ -184,66 +223,120 @@ fun ProblemsScreen(
                 }
             }
 
-            item {
-                MarkedProblemsSection(
-                    nativeProblems = uiState.markedNativeProblems,
-                    leetCodeProblems = uiState.markedLeetCodeProblems,
-                    solvedNativeProblemIds = uiState.solvedNativeProblemIds,
-                    solvedLeetCodeProblemIds = uiState.solvedLeetCodeProblemIds,
-                    onProblemClick = onProblemClick,
-                    onLeetCodeClick = onLeetCodeClick
-                )
-            }
+                item {
+                    Text(
+                        text = "Common Problems",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
 
-            item {
-                Text(
-                    text = "Common Problems",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            when {
-                uiState.isLoading -> {
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = Dimens.SpacingLarge),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
+                when {
+                    uiState.isLoading -> {
+                        item {
+                            ProblemsLoadingScreen()
+                        }
+                    }
+                    uiState.error != null -> {
+                        item {
+                            EmptyStates.GenericError(
+                                message = uiState.error ?: "Unknown error occurred",
+                                onRetry = { }
+                            )
+                        }
+                    }
+                    uiState.problems.isEmpty() -> {
+                        item {
+                            if (uiState.filter.searchQuery.isNotEmpty()) {
+                                EmptyStates.SearchNoResults(query = uiState.filter.searchQuery)
+                            } else {
+                                EmptyStates.NoProblems()
+                            }
+                        }
+                    }
+                    else -> {
+                        itemsIndexed(
+                            items = uiState.problems,
+                            key = { _, problem -> problem.id }
+                        ) { index, problem ->
+                            StaggeredProblemCard(
+                                problem = problem,
+                                index = index + 1,
+                                isSolved = uiState.solvedNativeProblemIds.contains(problem.id),
+                                onClick = { onProblemClick(problem.id) }
+                            )
                         }
                     }
                 }
-                uiState.error != null -> {
-                    item {
-                        EmptyStates.GenericError(
-                            message = uiState.error ?: "Unknown error occurred",
-                            onRetry = { }
-                        )
-                    }
+            } else {
+                // Marked Tab
+                item {
+                    Text(
+                        text = "Marked Problems",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
-                uiState.problems.isEmpty() -> {
+
+                item {
+                    Text(
+                        text = "Your saved and solved problems from both collections.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                if (uiState.markedNativeProblems.isEmpty() && uiState.markedLeetCodeProblems.isEmpty()) {
                     item {
-                        if (uiState.filter.searchQuery.isNotEmpty()) {
-                            EmptyStates.SearchNoResults(query = uiState.filter.searchQuery)
-                        } else {
-                            EmptyStates.NoProblems()
+                        EmptyStates.NoProblems()
+                    }
+                } else {
+                    // Native Problems Section
+                    if (uiState.markedNativeProblems.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = "Common Problems (${uiState.markedNativeProblems.size})",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                modifier = Modifier.padding(top = Dimens.SpacingMedium)
+                            )
+                        }
+
+                        itemsIndexed(
+                            items = uiState.markedNativeProblems,
+                            key = { _, problem -> "native_${problem.id}" }
+                        ) { index, problem ->
+                            StaggeredProblemCard(
+                                problem = problem,
+                                index = index,
+                                isSolved = uiState.solvedNativeProblemIds.contains(problem.id),
+                                onClick = { onProblemClick(problem.id) }
+                            )
                         }
                     }
-                }
-                else -> {
-                    itemsIndexed(
-                        items = uiState.problems,
-                        key = { _, problem -> problem.id }
-                    ) { index, problem ->
-                        StaggeredProblemCard(
-                            problem = problem,
-                            index = index + 1,
-                            isSolved = uiState.solvedNativeProblemIds.contains(problem.id),
-                            onClick = { onProblemClick(problem.id) }
-                        )
+
+                    // LeetCode Problems Section
+                    if (uiState.markedLeetCodeProblems.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = "LeetCode Problems (${uiState.markedLeetCodeProblems.size})",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                modifier = Modifier.padding(top = Dimens.SpacingMedium)
+                            )
+                        }
+
+                        itemsIndexed(
+                            items = uiState.markedLeetCodeProblems,
+                            key = { _, problem -> "leetcode_${problem.id}" }
+                        ) { index, problem ->
+                            MarkedLeetCodeCard(
+                                problem = problem,
+                                index = uiState.markedNativeProblems.size + index,
+                                isSolved = uiState.solvedLeetCodeProblemIds.contains(problem.id),
+                                onClick = onLeetCodeClick
+                            )
+                        }
                     }
                 }
             }
@@ -252,57 +345,99 @@ fun ProblemsScreen(
 }
 
 @Composable
-private fun MarkedProblemsSection(
-    nativeProblems: List<Problem>,
-    leetCodeProblems: List<LeetCodeProblemItem>,
-    solvedNativeProblemIds: Set<Int>,
-    solvedLeetCodeProblemIds: Set<String>,
-    onProblemClick: (Int) -> Unit,
-    onLeetCodeClick: () -> Unit
+private fun GlobalStatsCard(
+    totalSolved: Int,
+    nativeSolved: Int,
+    leetCodeSolved: Int,
+    totalMarked: Int
 ) {
-    if (nativeProblems.isEmpty() && leetCodeProblems.isEmpty()) return
-
-    Column(
+    Card(
         modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(Dimens.SpacingMedium)
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Text(
-            text = "Marked",
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Dimens.SpacingMedium),
+            verticalArrangement = Arrangement.spacedBy(Dimens.SpacingSmall)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Your Progress",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
 
-        Text(
-            text = "Your saved and solved app problems plus marked LeetCode problems in one place.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        nativeProblems.forEachIndexed { index, problem ->
-            StaggeredProblemCard(
-                problem = problem,
-                index = index,
-                isSolved = solvedNativeProblemIds.contains(problem.id),
-                onClick = { onProblemClick(problem.id) }
+            Divider(
+                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.2f),
+                modifier = Modifier.padding(vertical = Dimens.SpacingXSmall)
             )
-        }
 
-        leetCodeProblems.take(8).forEachIndexed { index, problem ->
-            MarkedLeetCodeCard(
-                problem = problem,
-                index = nativeProblems.size + index,
-                isSolved = solvedLeetCodeProblemIds.contains(problem.id),
-                onClick = onLeetCodeClick
-            )
-        }
-
-        if (leetCodeProblems.size > 8) {
-            TextButton(onClick = onLeetCodeClick) {
-                Text("View all marked LeetCode problems")
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                StatItem(
+                    label = "Total Solved",
+                    value = totalSolved.toString(),
+                    modifier = Modifier.weight(1f)
+                )
+                StatItem(
+                    label = "Common",
+                    value = nativeSolved.toString(),
+                    modifier = Modifier.weight(1f)
+                )
+                StatItem(
+                    label = "LeetCode",
+                    value = leetCodeSolved.toString(),
+                    modifier = Modifier.weight(1f)
+                )
+                StatItem(
+                    label = "Marked",
+                    value = totalMarked.toString(),
+                    modifier = Modifier.weight(1f)
+                )
             }
         }
+    }
+}
 
-        Divider()
+@Composable
+private fun StatItem(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Text(
+            text = value,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onPrimaryContainer
+        )
     }
 }
 
@@ -402,7 +537,10 @@ private fun MarkedLeetCodeCard(
 @Composable
 private fun ProblemsCollectionsSection(
     onCommonProblemsClick: () -> Unit,
-    onLeetCodeClick: () -> Unit
+    onLeetCodeClick: () -> Unit,
+    onApnaCollegeClick: () -> Unit,
+    onFrazClick: () -> Unit,
+    onLoveBabbarClick: () -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(Dimens.SpacingMedium)
@@ -433,6 +571,48 @@ private fun ProblemsCollectionsSection(
                 )
             },
             onClick = onLeetCodeClick
+        )
+
+        CollectionEntryCard(
+            title = "Apna College DSA Sheet",
+            description = "Curated by Shradha Didi & Aman Bhaiya. 375 problems across various topics.",
+            supportingText = "External collection",
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = "Apna College",
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            },
+            onClick = onApnaCollegeClick
+        )
+
+        CollectionEntryCard(
+            title = "Fraz DSA Sheet",
+            description = "Comprehensive DSA practice by Fraz Mohammad with video tutorials.",
+            supportingText = "External collection",
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = "Fraz DSA Sheet",
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            },
+            onClick = onFrazClick
+        )
+
+        CollectionEntryCard(
+            title = "Love Babbar 450",
+            description = "450 most important DSA problems curated by Love Babbar for interview prep.",
+            supportingText = "External collection",
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = "Love Babbar 450",
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            },
+            onClick = onLoveBabbarClick
         )
     }
 }
@@ -501,6 +681,91 @@ private fun CollectionEntryCard(
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
+    }
+}
+
+@Composable
+private fun ProblemsLoadingScreen() {
+    val loadingMessages = listOf(
+        "🔥 Preparing some cooked codes...",
+        "💡 Loading brilliant solutions...",
+        "🚀 Fetching awesome problems...",
+        "⚡ Compiling challenges...",
+        "🎯 Getting ready for action...",
+        "🧠 Loading brain teasers...",
+        "💪 Preparing your coding journey...",
+        "✨ Crafting perfect problems..."
+    )
+    
+    var currentMessageIndex by remember { mutableStateOf(0) }
+    var progress by remember { mutableStateOf(0f) }
+    
+    LaunchedEffect(Unit) {
+        // Cycle through messages
+        while (true) {
+            delay(1500)
+            currentMessageIndex = (currentMessageIndex + 1) % loadingMessages.size
+        }
+    }
+    
+    LaunchedEffect(Unit) {
+        // Animate progress
+        while (progress < 1f) {
+            delay(50)
+            progress += 0.02f
+        }
+    }
+    
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 48.dp, horizontal = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(24.dp)
+    ) {
+        // Animated message
+        Text(
+            text = loadingMessages[currentMessageIndex],
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+        )
+        
+        // Progress bar
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            LinearProgressIndicator(
+                progress = progress,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp),
+                color = MaterialTheme.colorScheme.primary,
+                trackColor = MaterialTheme.colorScheme.surfaceVariant
+            )
+            
+            Text(
+                text = "${(progress * 100).toInt()}%",
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        
+        // Circular progress indicator
+        CircularProgressIndicator(
+            modifier = Modifier.size(48.dp),
+            color = MaterialTheme.colorScheme.primary
+        )
+        
+        Text(
+            text = "Hang tight! We're loading all the problems for you...",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+        )
     }
 }
 

@@ -1,0 +1,94 @@
+item_id,topic_id,subtopic_id,section,content,platform,link,line_number
+1,1,1,Theory,C++ Arrays (With Examples),,,6
+2,1,1,Theory,Java Array (With Examples),,,7
+3,1,1,Theory,Python Array (With Examples),,,8
+4,1,2,Theory,https://www.geeksforgeeks.org/binary-search/,GeeksforGeeks,https://www.geeksforgeeks.org/binary-search/,17
+5,1,2,Problems,Search Insert Position - LeetCode,LeetCode,,19
+6,1,2,Problems,Sqrt(x) - LeetCode,LeetCode,,20
+7,1,2,Problems,Find Smallest Letter Greater Than Target - LeetCode,LeetCode,,21
+8,1,2,Problems,Kth Smallest Element in a Sorted Matrix - LeetCode,LeetCode,,22
+9,1,3,Theory,https://www.geeksforgeeks.org/two-pointers-technique/,GeeksforGeeks,https://www.geeksforgeeks.org/two-pointers-technique/,25
+10,1,3,Problems,3 Sum | Interviewbit,InterviewBit,,27
+11,1,3,Problems,Merge Two Sorted Lists II | Interviewbit,InterviewBit,,28
+12,1,3,Problems,Remove Duplicates from Sorted Array | Interviewbit,InterviewBit,,29
+13,2,4,Problems,Integer To Roman | Interviewbit,InterviewBit,,32
+14,2,4,Problems,Reverse the String | Interviewbit,InterviewBit,,33
+15,2,4,Problems,Implement StrStr | Interviewbit,InterviewBit,,34
+16,2,4,Problems,Vowel and Consonant Substrings! | Interviewbit,InterviewBit,,35
+17,2,4,Problems,Longest Common Prefix | Interviewbit,InterviewBit,,36
+18,2,4,Problems,Longest Palindromic Substring | Interviewbit,InterviewBit,,37
+19,3,4,Theory,https://www.programiz.com/dsa/linked-list,Programiz,https://www.programiz.com/dsa/linked-list,40
+20,3,4,Problems,Reverse a linked list - GeeksforGeeks,GeeksforGeeks,,42
+21,3,4,Problems,​​Rotate a Linked List - GeeksforGeeks,GeeksforGeeks,,43
+22,3,4,Problems,Function to check if a singly linked list is palindrome - GeeksforGeeks,GeeksforGeeks,,44
+23,3,4,Problems,Find the middle of a given linked list - GeeksforGeeks,GeeksforGeeks,,47
+24,3,4,Problems,Delete N nodes after M nodes of a linked list - GeeksforGeeks,GeeksforGeeks,,48
+25,3,4,Problems,Reverse alternate K nodes in a Singly Linked List - GeeksforGeeks,GeeksforGeeks,,50
+26,4,4,Theory,https://www.programiz.com/dsa/stack,Programiz,https://www.programiz.com/dsa/stack,53
+27,4,4,Theory,https://www.geeksforgeeks.org/stack-in-cpp-stl/,GeeksforGeeks,https://www.geeksforgeeks.org/stack-in-cpp-stl/,54
+28,4,4,Theory,https://www.geeksforgeeks.org/stack-class-in-java/,GeeksforGeeks,https://www.geeksforgeeks.org/stack-class-in-java/,55
+29,4,4,Theory,https://www.geeksforgeeks.org/stack-in-python/,GeeksforGeeks,https://www.geeksforgeeks.org/stack-in-python/,56
+30,4,4,Theory,https://www.programiz.com/dsa/queue,Programiz,https://www.programiz.com/dsa/queue,57
+31,4,4,Theory,https://www.geeksforgeeks.org/queue-cpp-stl/,GeeksforGeeks,https://www.geeksforgeeks.org/queue-cpp-stl/,58
+32,4,4,Theory,https://www.geeksforgeeks.org/queue-interface-java/,GeeksforGeeks,https://www.geeksforgeeks.org/queue-interface-java/,59
+33,4,4,Theory,https://www.geeksforgeeks.org/queue-in-python/,GeeksforGeeks,https://www.geeksforgeeks.org/queue-in-python/,60
+34,4,4,Problems,Balanced Parantheses! | Interviewbit,InterviewBit,,62
+35,4,4,Problems,Redundant Braces | Interviewbit,InterviewBit,,63
+36,4,4,Problems,Nearest Smaller Element | Interviewbit,InterviewBit,,64
+37,4,4,Problems,Largest Rectangle in Histogram | Interviewbit,InterviewBit,,65
+38,4,4,Problems,Min Stack | Interviewbit,InterviewBit,,66
+39,4,4,Problems,First Unique Character in a String - LeetCode,LeetCode,,67
+40,4,4,Problems,Implement Stack using Queues - LeetCode,LeetCode,,68
+41,4,4,Problems,Time Needed to Buy Tickets - LeetCode,LeetCode,,69
+42,4,4,Problems,Implement Queue using Stacks - LeetCode,LeetCode,,70
+43,5,4,Theory,https://www.programiz.com/dsa/hash-table,Programiz,https://www.programiz.com/dsa/hash-table,73
+44,5,4,Theory,https://www.geeksforgeeks.org/unordered_map-in-cpp-stl/,GeeksforGeeks,https://www.geeksforgeeks.org/unordered_map-in-cpp-stl/,74
+45,5,4,Theory,https://www.geeksforgeeks.org/java-util-hashmap-in-java-with-examples/,GeeksforGeeks,https://www.geeksforgeeks.org/java-util-hashmap-in-java-with-examples/,75
+46,5,4,Theory,https://www.geeksforgeeks.org/hash-map-in-python/,GeeksforGeeks,https://www.geeksforgeeks.org/hash-map-in-python/,76
+47,6,5,Theory,https://www.geeksforgeeks.org/introduction-to-tree-data-structure/,GeeksforGeeks,https://www.geeksforgeeks.org/introduction-to-tree-data-structure/,87
+48,6,5,Theory,https://www.geeksforgeeks.org/binary-tree-set-1-introduction/?ref=lbp,GeeksforGeeks,https://www.geeksforgeeks.org/binary-tree-set-1-introduction/?ref=lbp,88
+49,6,5,Theory,https://www.geeksforgeeks.org/binary-tree-set-2-properties/?ref=lbp,GeeksforGeeks,https://www.geeksforgeeks.org/binary-tree-set-2-properties/?ref=lbp,89
+50,6,5,Theory,https://www.geeksforgeeks.org/binary-tree-set-3-types-of-binary-tree/?ref=lbp,GeeksforGeeks,https://www.geeksforgeeks.org/binary-tree-set-3-types-of-binary-tree/?ref=lbp,90
+51,6,5,Problems,Inorder Traversal | Interviewbit,InterviewBit,,92
+52,6,5,Problems,Preorder Traversal | Interviewbit,InterviewBit,,93
+53,6,5,Problems,Postorder Traversal | Interviewbit,InterviewBit,,94
+54,6,5,Problems,Max Depth of Binary Tree | Interviewbit,InterviewBit,,95
+55,6,5,Problems,Right view of Binary tree | Interviewbit,InterviewBit,,96
+56,6,5,Problems,Sorted Array To Balanced BST | Interviewbit,InterviewBit,,97
+57,6,5,Problems,Root to Leaf Paths With Sum | Interviewbit,InterviewBit,,98
+58,6,5,Problems,ZigZag Level Order Traversal BT | Interviewbit,InterviewBit,,99
+59,6,5,Problems,Symmetric Binary Tree | Interviewbit,InterviewBit,,100
+60,6,5,Problems,Balanced Binary Tree | Interviewbit,InterviewBit,,101
+61,6,5,Problems,Valid BST from Preorder | Interviewbit,InterviewBit,,102
+62,6,5,Problems,Kth Smallest Element In Tree | Interviewbit,InterviewBit,,103
+63,6,6,Theory,https://www.geeksforgeeks.org/binary-heap/,GeeksforGeeks,https://www.geeksforgeeks.org/binary-heap/,106
+64,6,6,Problems,K Largest Elements | Interviewbit,InterviewBit,,108
+65,6,6,Problems,Merge K Sorted Lists | Interviewbit,InterviewBit,,109
+66,6,7,Theory,https://www.geeksforgeeks.org/advantages-trie-data-structure/?ref=lbp,GeeksforGeeks,https://www.geeksforgeeks.org/advantages-trie-data-structure/?ref=lbp,112
+67,6,7,Theory,https://www.geeksforgeeks.org/trie-insert-and-search/?ref=lbp,GeeksforGeeks,https://www.geeksforgeeks.org/trie-insert-and-search/?ref=lbp,113
+68,6,7,Theory,https://www.geeksforgeeks.org/trie-delete/?ref=lbp,GeeksforGeeks,https://www.geeksforgeeks.org/trie-delete/?ref=lbp,114
+69,6,7,Problems,Hotel Reviews | Interviewbit,InterviewBit,,116
+70,6,7,Problems,Shortest Unique Prefix | Interviewbit,InterviewBit,,117
+71,7,7,Theory,https://www.youtube.com/watch?v=OQ5jsbhAv_M&list=PLcDimPvbmfT8qAxD6JH_kmXiQwTNcoK78,YouTube,https://www.youtube.com/watch?v=OQ5jsbhAv_M&list=PLcDimPvbmfT8qAxD6JH_kmXiQwTNcoK78,120
+72,7,7,Theory,https://www.youtube.com/watch?v=ENyox7kNKeY&list=PLcDimPvbmfT8qAxD6JH_kmXiQwTNcoK78&index=2,YouTube,https://www.youtube.com/watch?v=ENyox7kNKeY&list=PLcDimPvbmfT8qAxD6JH_kmXiQwTNcoK78&index=2,121
+73,7,7,Theory,https://www.youtube.com/watch?v=ocZMDMZwhCY&list=PLcDimPvbmfT8qAxD6JH_kmXiQwTNcoK78&index=3,YouTube,https://www.youtube.com/watch?v=ocZMDMZwhCY&list=PLcDimPvbmfT8qAxD6JH_kmXiQwTNcoK78&index=3,122
+74,7,7,Theory,https://www.geeksforgeeks.org/program-for-nth-fibonacci-number/,GeeksforGeeks,https://www.geeksforgeeks.org/program-for-nth-fibonacci-number/,123
+75,7,7,Problems,https://www.geeksforgeeks.org/longest-increasing-subsequence-dp-3/,GeeksforGeeks,https://www.geeksforgeeks.org/longest-increasing-subsequence-dp-3/,125
+76,7,7,Problems,https://www.geeksforgeeks.org/longest-common-subsequence-dp-4/,GeeksforGeeks,https://www.geeksforgeeks.org/longest-common-subsequence-dp-4/,126
+77,7,7,Problems,https://www.geeksforgeeks.org/longest-common-substring-dp-29/,GeeksforGeeks,https://www.geeksforgeeks.org/longest-common-substring-dp-29/,127
+78,7,7,Problems,Edit Distance | Interviewbit,InterviewBit,,136
+79,7,7,Problems,Ways to Decode | Interviewbit,InterviewBit,,137
+80,7,7,Problems,Longest valid Parentheses | Interviewbit,InterviewBit,,138
+81,7,7,Problems,Dungeon Princess | Interviewbit,InterviewBit,,139
+82,7,7,Problems,Max Product Subarray | Interviewbit,InterviewBit,,140
+83,7,7,Problems,Max Sum Without Adjacent Elements | Interviewbit,InterviewBit,,141
+84,7,7,Problems,Best Time to Buy and Sell Stocks I | Interviewbit,InterviewBit,,142
+85,7,7,Problems,Best Time to Buy and Sell Stocks II | Interviewbit,InterviewBit,,143
+86,8,7,Theory,https://www.geeksforgeeks.org/graph-and-its-representations/,GeeksforGeeks,https://www.geeksforgeeks.org/graph-and-its-representations/,146
+87,8,7,Theory,https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/,GeeksforGeeks,https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/,147
+88,8,7,Theory,https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/,GeeksforGeeks,https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/,148
+89,8,7,Theory,https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/,GeeksforGeeks,https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/,149
+90,8,7,Theory,https://www.geeksforgeeks.org/prims-minimum-spanning-tree-mst-greedy-algo-5/,GeeksforGeeks,https://www.geeksforgeeks.org/prims-minimum-spanning-tree-mst-greedy-algo-5/,150
+91,8,7,Theory,https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/,GeeksforGeeks,https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/,151
+92,8,7,Theory,https://www.geeksforgeeks.org/floyd-warshall-algorithm-dp-16/,GeeksforGeeks,https://www.geeksforgeeks.org/floyd-warshall-algorithm-dp-16/,152
+93,8,7,Theory,https://www.geeksforgeeks.org/union-find-algorithm-union-rank-find-optimized-path-compression/,GeeksforGeeks,https://www.geeksforgeeks.org/union-find-algorithm-union-rank-find-optimized-path-compression/,153
